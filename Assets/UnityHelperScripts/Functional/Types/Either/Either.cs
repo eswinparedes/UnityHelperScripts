@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
-
+using SUHScripts.Functional.UnitType;
 namespace SUHScripts.Functional
 {
     public struct Either<L, R>

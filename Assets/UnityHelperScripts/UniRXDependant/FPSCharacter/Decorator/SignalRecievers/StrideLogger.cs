@@ -55,6 +55,7 @@ public class StrideLogger : I_CharacterStrideSignals
 
     public void Dispose()
     {
+        Debug.Log("Stride disposed");
         m_subscriptions.ForEach(sub => sub.Dispose());
         m_subscriptions.Clear();
     }

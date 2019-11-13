@@ -47,10 +47,17 @@ public static class UNIRX_Ext
     public static IObservable<T> DoLog<T>(this IObservable<T> @this, string message) =>
         @this.Do(value => Debug.Log($"{message} : {value}"));
 
-    public static IDisposable SubscribeCatched<T>(this IObservable<T> @this, Action<T> action) =>
+    public static IDisposable Subscribe_EXLOG<T>(this IObservable<T> @this, Action<T> onNext, Action onComplete) =>
         @this
         .Subscribe(
-            action, 
+            onNext, 
+            onCompleted: () => onComplete.Invoke(),
+            onError: e => Debug.LogError($"Exception observed: {e.Message}"));
+
+    public static IDisposable Subscribe_EXLOG<T>(this IObservable<T> @this, Action<T> onNext) =>
+        @this
+        .Subscribe(
+            onNext,
             onError: e => Debug.LogError($"Exception observed: {e.Message}"));
 
     public static IDisposable AddTo(this IDisposable @this, List<IDisposable> subList)
@@ -58,4 +65,11 @@ public static class UNIRX_Ext
         subList.Add(@this);
         return @this; 
     }
+
+    public static IDisposable SubscribeDebug<T>(this IObservable<T> @this, string message, string title = "") =>
+        @this
+        .Subscribe(
+            onNext: val => Debug.Log(title + message + val.ToString()),
+            onCompleted: () => Debug.Log($"{title} On completed() "),
+            onError: e => Debug.LogError($"{title} onError() {e.Message}"));
 }

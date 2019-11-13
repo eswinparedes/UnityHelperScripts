@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UniRx;
 using static PoolableAudioExtensions;
 
-public class AudioPool : A_Component
+public class AudioPool : MonoBehaviour
 {
     [SerializeField] PoolableAudio prefab = default;
 
@@ -11,9 +12,15 @@ public class AudioPool : A_Component
     public static AudioPool Instance { get; private set; } = null;
     public static GameObject Prefab { get; private set; }
 
-    public static void PlaySoundOneShot(AudioClip clip, PoolableAudioSettings settings)
+    //SUHS TODO: Remove need for "Get Component" Possibly by casting ?
+    public static void PlaySoundOneShot(AudioClip clip, PoolableAudioSettings settings, Vector3? location = null)
     {
-        PoolableAudio poolableAudio = PrefabPoolingSystem.Spawn(Prefab.gameObject).GetComponent<PoolableAudio>();
+        var audioGO = PrefabPoolingSystem.Spawn(Prefab.gameObject);
+        var poolableAudio = audioGO.GetComponent<PoolableAudio>();
+
+        if (location.HasValue)
+            audioGO.transform.position = location.Value;
+
         m_spawned.Add(poolableAudio);
         poolableAudio.PlaySoundOneShot(clip, settings);
     }
@@ -23,17 +30,29 @@ public class AudioPool : A_Component
         PlaySoundOneShot(clip, QuickSettings);
     }
 
-    public override void Execute()
+    public static void PlaySoundOneShot(SO_AudioPoolData data)
     {
-        m_spawned.RemoveWhere(poolableAudio =>
-        {
-            bool shouldDespawn = !poolableAudio.Source.isPlaying;
+        PlaySoundOneShot(data.Clip, data.Settings);
+    }
 
-            if (shouldDespawn)
-                PrefabPoolingSystem.Despawn(poolableAudio.gameObject);
+    public static void PlaySoundOneShot(AudioClip clip, Transform location)
+    {
+        PlaySoundOneShot(clip, QuickSettings, location.position);
+    }
 
-            return shouldDespawn;
-        });
+    public static void PlaySoundOneShot(SO_AudioPoolData data, Transform location)
+    {
+        PlaySoundOneShot(data.Clip, data.Settings, location.position);
+    }
+
+    public static void PlaySoundOneShot(AudioClip clip, Vector3 location)
+    {
+        PlaySoundOneShot(clip, QuickSettings, location);
+    }
+
+    public static void PlaySoundOneShot(SO_AudioPoolData data, Vector3 location)
+    {
+        PlaySoundOneShot(data.Clip, data.Settings, location);
     }
 
     private void Start()
@@ -47,7 +66,21 @@ public class AudioPool : A_Component
             Instance = this;
             Prefab = prefab.gameObject;
         }
+
+        M_UpdateManager
+            .OnFixedUpdate_0
+            .Subscribe(_ =>
+            {
+                m_spawned.RemoveWhere(poolableAudio =>
+                {
+                    bool shouldDespawn = !poolableAudio.Source.isPlaying;
+
+                    if (shouldDespawn)
+                        PrefabPoolingSystem.Despawn(poolableAudio.gameObject);
+
+                    return shouldDespawn;
+                });
+            })
+            .AddTo(this);
     }
-
-
 }

@@ -6,5 +6,19 @@ public struct PoolableAudioSettings
 {
     public float volume;
     public float pitch;
-    public bool loop;
+    public float spatialBlend;
+
+    public PoolableAudioSettings(float volume, float pitch)
+    {
+        this.volume = volume;
+        this.pitch = pitch;
+        this.spatialBlend = 0;
+    }
+
+    public PoolableAudioSettings(float volume, float pitch, float spatialBlend)
+    {
+        this.volume = volume;
+        this.pitch = pitch;
+        this.spatialBlend = spatialBlend;
+    }
 }

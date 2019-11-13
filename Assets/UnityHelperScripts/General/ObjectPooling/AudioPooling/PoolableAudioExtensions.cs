@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public static class PoolableAudioExtensions
 {
@@ -9,13 +7,15 @@ public static class PoolableAudioExtensions
         {
             volume = 1,
             pitch = 1,
-            loop = false
+            spatialBlend = 0
         };
 
     public static void PlaySoundOneShot(this PoolableAudio @this, AudioClip clip, PoolableAudioSettings settings)
     {
         @this.Source.volume = settings.volume;
         @this.Source.pitch = settings.pitch;
+        @this.Source.spatialBlend = settings.spatialBlend;
+       
         @this.Source.PlayOneShot(clip);
     }
 

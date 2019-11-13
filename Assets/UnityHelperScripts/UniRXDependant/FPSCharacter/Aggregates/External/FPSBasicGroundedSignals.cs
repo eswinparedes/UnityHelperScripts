@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 [System.Serializable]
 public class FPSBasicGroundedSignals
@@ -29,7 +30,6 @@ public class FPSBasicGroundedSignals
 
     public void Dispose()
     {
-        Debug.Log("Dispose basic grounded siganals");
         m_strideLogger.Dispose();
 
         m_cameraBob.Dispose();

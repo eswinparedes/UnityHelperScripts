@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using static SUHScripts.Functional.Functional;
-
+using SUHScripts.Functional.UnitType;
 namespace SUHScripts.Functional
 {
     public static class ValidationExtensions

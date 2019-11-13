@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SUHScripts.Functional
+namespace SUHScripts.Functional.UnitType
 {
     public struct Unit { }
 }

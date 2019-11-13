@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static SUHScripts.Functional.Functional;
-
+using SUHScripts.Functional.UnitType;
 namespace SUHScripts.Functional
 {
     public static class OptionExtensions

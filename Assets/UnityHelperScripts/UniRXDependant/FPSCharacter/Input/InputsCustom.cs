@@ -5,12 +5,17 @@ using UnityEngine;
 
 public class InputsCustom : A_Inputs
 {
+    [Header("Deps")]
+    [SerializeField] M_Interactor m_interactor = default;
+    [SerializeField] FPSRoot m_root = default;
+    [Header("Inputs")]
     [SerializeField] KeyCode m_jumpKey = KeyCode.Space;
     [SerializeField] KeyCode m_sprintKey = KeyCode.LeftShift;
     [SerializeField] KeyCode m_dashKey = KeyCode.T;
     [SerializeField] KeyCode m_interactKey = KeyCode.E;
     [SerializeField] KeyCode m_ADSKey = KeyCode.Mouse1;
     [SerializeField] KeyCode m_fireKey = KeyCode.Mouse0;
+    
 
     public override IObservable<MoveInputs> MoveInputs { get; protected set; }
     public override IObservable<Vector2> CameraLook { get; protected set; }
@@ -32,74 +37,107 @@ public class InputsCustom : A_Inputs
     BoolTrifecta sprint = default;
     BoolTrifecta dash = default;
 
-    private void Update()
-    {
-        if (jumpPending)
-        {
-            jump = jump.AsTrueThisFrame();
-        }
-        else
-        {
-            if (Input.GetKeyDown(m_jumpKey))
-            {
-                jumpPending = true;
-                jump = jump.AsTrueThisFrame();
-            }
-            else if (Input.GetKey(m_jumpKey))
-                jump = jump.AsTrueStay();
-            else if (Input.GetKeyUp(m_jumpKey))
-                jump = jump.AsFalseThisFrame();
-            else
-                jump = default;
-        }
-
-        if (sprintPending)
-        {
-            sprint = sprint.AsTrueThisFrame();
-        }
-        else
-        {
-            if (Input.GetKeyDown(m_sprintKey))
-            {
-                sprintPending = true;
-                sprint = sprint.AsTrueThisFrame();
-            }
-            else if (Input.GetKey(m_sprintKey))
-                sprint = sprint.AsTrueStay();
-            else if (Input.GetKeyUp(m_sprintKey))
-                sprint = sprint.AsFalseThisFrame();
-            else
-                sprint = default;
-        }
-
-        if (dashPending)
-        {
-            dash = dash.AsTrueThisFrame();
-        }
-        else
-        {
-            if (Input.GetKeyDown(m_dashKey))
-            {
-                dashPending = true;
-                dash = dash.AsTrueThisFrame();
-            }
-            else if (Input.GetKey(m_dashKey))
-                dash = dash.AsTrueStay();
-            else if (Input.GetKeyUp(m_dashKey))
-                dash = dash.AsFalseThisFrame();
-            else
-                dash = default;
-        }
-    }
 
     public override void Initialize()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        var canMove = true;
+
+        m_interactor
+            .InteractableStarted
+            .Subscribe(interactableType =>
+            {
+                switch (interactableType)
+                {
+                    case InteractionType.Basic: break;
+                    case InteractionType.LockView:
+                        {
+                            canMove = false;
+                        } 
+                        break;
+                    default: throw new Exception("Pattern match not exhausted");
+                }
+            })
+            .AddTo(this);
+
+        m_interactor
+            .InteractableEnded
+            .Subscribe(_ =>
+            {
+                canMove = true;
+            })
+            .AddTo(this);
+
+        m_root
+        .OnUpdate
+        .Where(_ => canMove)
+        .Subscribe(tick =>
+        {
+            if (jumpPending)
+            {
+                jump = jump.AsTrueThisFrame();
+            }
+            else
+            {
+                if (Input.GetKeyDown(m_jumpKey))
+                {
+                    jumpPending = true;
+                    jump = jump.AsTrueThisFrame();
+                }
+                else if (Input.GetKey(m_jumpKey))
+                    jump = jump.AsTrueStay();
+                else if (Input.GetKeyUp(m_jumpKey))
+                    jump = jump.AsFalseThisFrame();
+                else
+                    jump = default;
+            }
+
+            if (sprintPending)
+            {
+                sprint = sprint.AsTrueThisFrame();
+            }
+            else
+            {
+                if (Input.GetKeyDown(m_sprintKey))
+                {
+                    sprintPending = true;
+                    sprint = sprint.AsTrueThisFrame();
+                }
+                else if (Input.GetKey(m_sprintKey))
+                    sprint = sprint.AsTrueStay();
+                else if (Input.GetKeyUp(m_sprintKey))
+                    sprint = sprint.AsFalseThisFrame();
+                else
+                    sprint = default;
+            }
+
+            if (dashPending)
+            {
+                dash = dash.AsTrueThisFrame();
+            }
+            else
+            {
+                if (Input.GetKeyDown(m_dashKey))
+                {
+                    dashPending = true;
+                    dash = dash.AsTrueThisFrame();
+                }
+                else if (Input.GetKey(m_dashKey))
+                    dash = dash.AsTrueStay();
+                else if (Input.GetKeyUp(m_dashKey))
+                    dash = dash.AsFalseThisFrame();
+                else
+                    dash = default;
+            }
+        })
+        .AddTo(this);
+
         MoveInputs =
             this
             .FixedUpdateAsObservable()
+            .Where(_ => canMove)
                 .Select(_ =>
                 {
                     var x = Input.GetAxis("Horizontal");
@@ -116,6 +154,7 @@ public class InputsCustom : A_Inputs
         CameraLook = 
             this
             .UpdateAsObservable()
+            .Where(_ => canMove)
             .Select(_ =>
             {
                 var x = Input.GetAxis("Mouse X");
