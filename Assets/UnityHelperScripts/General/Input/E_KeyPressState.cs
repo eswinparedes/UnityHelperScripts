@@ -1,4 +1,4 @@
-﻿public enum E_KeyPressState
+﻿public enum KeyPressState
 {
     pressedThisFrame,
     releasedThisFrame,

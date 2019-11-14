@@ -63,4 +63,12 @@ public static class Vector3Extensions
     public static Vector3 AlongNormal(this Vector3 @this, Vector3 normal) =>
         Vector3.ProjectOnPlane(@this, normal).normalized;
 
+    public static Vector3 RandomComponents(Vector2 range)
+    {
+        Vector3 vector = Vector3.zero;
+        vector.x = UnityEngine.Random.Range(range.x, range.y);
+        vector.y = UnityEngine.Random.Range(range.x, range.y);
+        vector.z = UnityEngine.Random.Range(range.x, range.y);
+        return vector;
+    }
 }

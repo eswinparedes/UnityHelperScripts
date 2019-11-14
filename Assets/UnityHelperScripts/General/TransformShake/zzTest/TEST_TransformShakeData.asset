@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d43d8db86f8ccb540932221b993f4f83, type: 3}
+  m_Name: TEST_TransformShakeData
+  m_EditorClassIdentifier: 
+  m_positionData: {fileID: 11400000, guid: 4755c645173b1514ab28c4d0aa4e9645, type: 2}
+  m_rotationData: {fileID: 11400000, guid: 4755c645173b1514ab28c4d0aa4e9645, type: 2}
+  m_scaleData: {fileID: 11400000, guid: 4755c645173b1514ab28c4d0aa4e9645, type: 2}
