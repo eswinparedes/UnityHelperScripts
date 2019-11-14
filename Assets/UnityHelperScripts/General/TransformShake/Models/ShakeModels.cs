@@ -69,14 +69,12 @@ public class PerlinNoiseData_Constant : INoiseGenerator
 [System.Serializable]
 public class TransformShakeSubscriber
 {
-    [SerializeField] Transform m_shakeTransform = null;
     [SerializeField] float m_amplitudeMultiplier = 1;
     [SerializeField] float m_frequencyMultiplier = 1;
     [SerializeField] Vector3 m_positionScale = Vector3.one;
     [SerializeField] Vector3 m_rotationScale = Vector3.one;
     [SerializeField] Vector3 m_scaleScale = Vector3.one;
 
-    public Transform ShakeTransform => m_shakeTransform;
     public float AmplitudeMultiplier => m_amplitudeMultiplier;
     public float FrequencyMultiplier => m_frequencyMultiplier;
     public Vector3 PositionScale => m_positionScale;

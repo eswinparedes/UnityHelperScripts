@@ -15,7 +15,7 @@ MonoBehaviour:
   m_noiseData:
     frequency: 2
     amplitude: 1
-    duration: 10
+    duration: 2
     blendOverLifeTime:
       serializedVersion: 2
       m_Curve:

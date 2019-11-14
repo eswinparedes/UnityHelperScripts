@@ -28,6 +28,7 @@ public static class NoiseGenerationOperations
         return
             inputs =>
             {
+                
                 timeRemaining -= inputs.Delta;
 
                 float noiseOffsetDelta = inputs.Delta * @this.Frequency * inputs.FrequencyMultiplier;

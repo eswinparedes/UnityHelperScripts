@@ -22,12 +22,38 @@ public static class ShakeOperations
         return positionOffset;
     }
 
-
-    public static IDisposable SubscribeTo(this TransformShakeSubscriber @this, IObservable<float> tickStream, IObservable<SO_TransfromShakeData> shakeStream)
+    public static (IDisposable subscription, IObservable<Vector3> noiseFunction) SubscribeTo
+        (IObservable<float> tickStream, IObservable<INoiseGenerator> noiseStream)
     {
-        var baseScale = @this.ShakeTransform.localScale;
-        var baseEulerAngles = @this.ShakeTransform.localPosition;
-        var baseRotation = @this.ShakeTransform.localEulerAngles;
+        List<NoiseGenerator> noiseGenerators = new List<NoiseGenerator>();
+        Vector3 output = Vector3.zero;
+
+        var noiseStreamSub =
+            noiseStream
+            .Subscribe(noiseProvider => noiseGenerators.Add(noiseProvider.BuildGenerator()));
+
+        var tickStreamSub =
+            tickStream
+            .Subscribe(deltaTime =>
+            {
+                var input = new NoiseInput(deltaTime, 1, 1);
+                output = noiseGenerators.EvaluateAllWithKill(input);
+            });
+
+        var disp = Disposable.Create(() =>
+        {
+            noiseStreamSub.Dispose();
+            tickStreamSub.Dispose();
+        });
+
+        return (disp, tickStream.Select(_ => output));
+    }
+
+    public static IDisposable SubscribeTo(this TransformShakeSubscriber @this, Transform shakeTransform, IObservable<float> tickStream, IObservable<SO_TransfromShakeData> shakeStream)
+    {
+        var baseScale = shakeTransform.localScale;
+        var baseEulerAngles = shakeTransform.localPosition;
+        var baseRotation = shakeTransform.localEulerAngles;
 
         List<NoiseGenerator> positionGenerators = new List<NoiseGenerator>();
         List<NoiseGenerator> rotationGenerators = new List<NoiseGenerator>();
@@ -52,9 +78,9 @@ public static class ShakeOperations
                 Vector3 rotationMovement = rotationGenerators.EvaluateAllWithKill(input);
                 Vector3 scaleMovement = scaleGenerators.EvaluateAllWithKill(input);
 
-                @this.ShakeTransform.localPosition = baseEulerAngles + Vector3.Scale(@this.PositionScale, positionMovement);
-                @this.ShakeTransform.localEulerAngles = baseRotation + Vector3.Scale(@this.RotationScale, rotationMovement);
-                @this.ShakeTransform.localScale = baseScale + Vector3.Scale(@this.ScaleScale, scaleMovement);
+                shakeTransform.localPosition = baseEulerAngles + Vector3.Scale(@this.PositionScale, positionMovement);
+                shakeTransform.localEulerAngles = baseRotation + Vector3.Scale(@this.RotationScale, rotationMovement);
+                shakeTransform.localScale = baseScale + Vector3.Scale(@this.ScaleScale, scaleMovement);
             });
 
         return Disposable.Create(() =>
