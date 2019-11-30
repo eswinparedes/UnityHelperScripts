@@ -21,16 +21,19 @@ public class PrefabPool {
             GameObject newGo = GameObject.Instantiate(prefab, position, rotation);
             data = new PoolablePrefabData();
             data.go = newGo;
-            data.poolableComponent = newGo.GetComponent<IPoolableComponent>();
+            data.poolableComponents = newGo.GetComponentsInChildren<IPoolableComponent>();
         }
 
         data.go.SetActive(true);
         data.go.transform.position = position;
         data.go.transform.rotation = rotation;
 
-        if(data.poolableComponent != null)
+        if(data.poolableComponents != null)
         {
-            data.poolableComponent.Spawned();
+            for(int i =0; i < data.poolableComponents.Length; i++)
+            {
+                data.poolableComponents[i].Spawned();
+            }
         }
 
         _activeList.Add(data.go, data);
@@ -48,9 +51,12 @@ public class PrefabPool {
 
         PoolablePrefabData data = _activeList[obj];
 
-        if(data.poolableComponent != null)
+        if(data.poolableComponents != null)
         {
-            data.poolableComponent.Despawned();
+            for (int i = 0; i < data.poolableComponents.Length; i++)
+            {
+                data.poolableComponents[i].Despawned();
+            }
         }
 
         data.go.SetActive(false);

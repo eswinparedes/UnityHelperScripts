@@ -9,6 +9,22 @@ public static class NoiseGenerationOperations
 {
     public delegate NoiseOutput NoiseGenerator(NoiseInput noiseInput);
 
+    public static Vector3 EvaluateAllWithKill(this List<NoiseGenerator> @this, NoiseInput input)
+    {
+        Vector3 positionOffset = Vector3.zero;
+
+        for (int i = @this.Count - 1; i >= 0; i--)
+        {
+            var se = @this[i](input);
+
+            if (se.Noise.IsSome)
+                positionOffset += se.Noise.Value;
+            else
+                @this.RemoveAt(i);
+        }
+        return positionOffset;
+    }
+
     public static NoiseGenerator BuildGenerator(this INoiseGenerator @this)
     {
         switch (@this)
@@ -28,7 +44,6 @@ public static class NoiseGenerationOperations
         return
             inputs =>
             {
-                
                 timeRemaining -= inputs.Delta;
 
                 float noiseOffsetDelta = inputs.Delta * @this.Frequency * inputs.FrequencyMultiplier;

@@ -56,4 +56,30 @@ public static class ColliderObservableOperations
             }
         }
     }
+
+    public static IObservable<Option<T>> OnEnterComponentOption<T>(this A_ColliderObservable @this) =>
+        @this
+        .OnEnter
+        .Select(entered => entered.other.GetComponentOption<T>());
+
+    //SUHS TODO: Redundante use of getcomponent and then query compeonent?
+    //SUHS TODO: Can chain with onenter componentoption?
+    //SUHS TODO: Do the same for exit
+    //SUHS TODO: Track the lifetime of (enter/exit) of an object
+    public static IObservable<Option<T>> OnEnterQueryComponent<T>(this A_ColliderObservable @this) =>
+        @this
+        .OnEnter
+        .Select(entered => entered.other.GetComponentOption<A_QueryComponentSource>())
+        .Where(item => item.IsSome)
+        .Select(item => item.Value.QueryComponentOption<T>());
+
+    public static IObservable<T> OnEnterQuerySome<T>(this A_ColliderObservable @this) =>
+        @this
+        .OnEnterQueryComponent<T>()
+        .SelectSome();
+
+    public static IObservable<T> OnEnterGetComponentSome<T>(this A_ColliderObservable @this) =>
+        @this
+        .OnEnterComponentOption<T>()
+        .SelectSome();
 }

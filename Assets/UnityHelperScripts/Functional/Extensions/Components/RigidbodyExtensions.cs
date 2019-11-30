@@ -9,4 +9,10 @@ public static class RigidbodyExtensions
         body.velocity = Vector3.zero;
         body.angularVelocity = Vector3.zero;
     }
+
+    public static void StopAllMomentum(this Rigidbody2D @this)
+    {
+        @this.angularVelocity = 0;
+        @this.velocity = Vector2.zero;
+    }
 }

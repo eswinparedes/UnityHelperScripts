@@ -33,6 +33,9 @@ public static class Vector3Extensions
         (x == null ? @this.x : x.Value, y == null ? @this.y : y.Value, z == null ? @this.z : z.Value)
         .Vector3Construct();
 
+    public static Vector2 AsXY(this Vector3 @this) =>
+        new Vector2(@this.x, @this.y);
+
     public static Vector3 Average(this IEnumerable<Vector3> @this) =>
         @this.Aggregate((x, y) => x + y) / @this.Count();
 

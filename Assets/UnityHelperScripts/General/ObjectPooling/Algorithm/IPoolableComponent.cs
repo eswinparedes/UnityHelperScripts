@@ -9,5 +9,5 @@ public interface IPoolableComponent
 public struct PoolablePrefabData
 {
     public GameObject go;
-    public IPoolableComponent poolableComponent;
+    public IPoolableComponent[] poolableComponents;
 }

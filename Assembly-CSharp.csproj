@@ -2,8 +2,6 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <CscToolPath>D:\programs\UNITY_EDITORS\2019.1.6f1\Editor\Data\Tools\RoslynScripts</CscToolPath>
-    <CscToolExe>unity_csc.bat</CscToolExe>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -54,6 +52,9 @@
     <UnityVersion>2019.1.6f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="UnityEngine">
       <HintPath>D:\programs\UNITY_EDITORS\2019.1.6f1\Editor\Data\Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -62,9 +63,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\__UHS_UPDATE\SO_Tag.cs" />
     <Compile Include="Assets\UnityHelperScripts\Functional\Extensions\Collections\ArrayExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\Functional\Extensions\Collections\IEnumerableExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\Functional\Extensions\Collections\ListExtensions.cs" />
+    <Compile Include="Assets\UnityHelperScripts\Functional\Extensions\Components\ColliderExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\Functional\Extensions\Components\RenderExt.cs" />
     <Compile Include="Assets\UnityHelperScripts\Functional\Extensions\Components\RigidbodyExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\Functional\Extensions\Components\TransformExtensions.cs" />
@@ -143,10 +146,11 @@
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\AudioPooling\PoolableAudio.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\AudioPooling\PoolableAudioExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\AudioPooling\PoolableAudioSettings.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\IPComponents\Debug\M_Test_Pool.cs" />
+    <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\IPComponents\A_PoolableComponent.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\IPComponents\M_PoolableComponent.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\IPComponents\ResetPooledRigidBodyComponent.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\M_PrefabPoolingSystemBootsrap.cs" />
+    <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\zzTesting\M_Test_Pool.cs" />
+    <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\zzTesting\M_TestPrefabPoolableComponent.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\Required\ComponentManager\Base\A_Component.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\Required\ComponentManager\Base\I_QuickComponent.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\Required\ComponentManager\Base\M_ComponentManager.cs" />
@@ -248,16 +252,14 @@
     <Compile Include="Assets\UnityHelperScripts\General\Selectable\Test\M_SelectableEvents.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\Selectable\Test\TEST_Selectable.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\TransformShake\Function\NoiseGenerationOperations.cs" />
+    <Compile Include="Assets\UnityHelperScripts\General\TransformShake\Function\ShakeBehaviours.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\TransformShake\Function\ShakeOperations.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\TransformShake\Models\ShakeModels.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\TransformShake\Models\SO_A_NoiseData.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\TransformShake\Models\SO_PerlinNoiseData_Constant.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\TransformShake\Models\SO_PerlinNoiseData_Pulse.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\TransformShake\Models\SO_TransfromShakeData.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\TransformShake\zzOld\I_TransformShakeSubscriber.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\TransformShake\zzOld\SO_TransformShakeEvent.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\TransformShake\zzOld\TransformShakeBehaviour.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\TransformShake\zzTest\M_TransformShake.cs" />
+    <Compile Include="Assets\UnityHelperScripts\General\TransformShake\zzTest\zzTRANSFORM_SHAKE_TEST.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\Transition\M_TransformPositionTransition.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\Transition\M_TransformScaleTransition.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\Transition\SO_TransitionScaleSettings.cs" />
@@ -307,12 +309,20 @@
     <Compile Include="Assets\UnityHelperScripts\Structures\RadialMenu\TEST_RadialMenuBehaviour.cs" />
     <Compile Include="Assets\UnityHelperScripts\Structures\TransformIdentity\TransformIdentity.cs" />
     <Compile Include="Assets\UnityHelperScripts\Structures\TransformIdentity\TransformIdentityExtensions.cs" />
+    <Compile Include="Assets\UnityHelperScripts\Tools\ToolSet.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\A_ColliderObservable.cs" />
+    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\A_ColliderObservable2D.cs" />
+    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\ColliderObservable2DOperations.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\ColliderObservableOperations.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\M_ColliderObservable.cs" />
+    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\M_ColliderObservable2D.cs" />
+    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\M_ColliderObservable2DGrouped.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\M_GroupedColliderObservable.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\M_ToggleColliderObservables.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\CustomObservables\CustomObservables.cs" />
+    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\DisposableExtensions.cs" />
+    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\ObservableExtensions.cs" />
+    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\SubscribeExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\FPSCharacter\_Root\FPSRoot.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\FPSCharacter\_Root\FPSRoot_Ext.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\FPSCharacter\_Root\RootComponents\FPSCameraRoot.cs" />
@@ -364,7 +374,6 @@
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\FPSCharacter\Structures\PlayerData.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\FPSCharacter\Structures\TransformIdentityMaintainer.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Misc\M_UpdateManager.cs" />
-    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Misc\UNIRX_Ext.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\AppGeneral\M_SceneManager.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\Behaviours\ConditionallYExecute\ConditionalExecutionEventSet.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\Behaviours\ConditionallYExecute\ConditionallyExecuteActions.cs" />
