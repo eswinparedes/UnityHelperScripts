@@ -149,6 +149,8 @@
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\IPComponents\A_PoolableComponent.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\IPComponents\M_PoolableComponent.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\IPComponents\ResetPooledRigidBodyComponent.cs" />
+    <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\M_PoolableObservable.cs" />
+    <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\PrefabPoolingSystemBehaviours.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\zzTesting\M_Test_Pool.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\zzTesting\M_TestPrefabPoolableComponent.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\Required\ComponentManager\Base\A_Component.cs" />
@@ -307,8 +309,13 @@
     <Compile Include="Assets\UnityHelperScripts\Structures\RadialMenu\M_RadialObject.cs" />
     <Compile Include="Assets\UnityHelperScripts\Structures\RadialMenu\RadialMenuBehaviour.cs" />
     <Compile Include="Assets\UnityHelperScripts\Structures\RadialMenu\TEST_RadialMenuBehaviour.cs" />
+    <Compile Include="Assets\UnityHelperScripts\Structures\TransformIdentity\Test\zzTransformOrientation_TEST.cs" />
     <Compile Include="Assets\UnityHelperScripts\Structures\TransformIdentity\TransformIdentity.cs" />
     <Compile Include="Assets\UnityHelperScripts\Structures\TransformIdentity\TransformIdentityExtensions.cs" />
+    <Compile Include="Assets\UnityHelperScripts\Structures\TransformIdentity\TransformOrientation.cs" />
+    <Compile Include="Assets\UnityHelperScripts\Structures\TransformIdentity\TransformOrientationBehaviours.cs" />
+    <Compile Include="Assets\UnityHelperScripts\Structures\TransformIdentity\TransformOrientationOperations.cs" />
+    <Compile Include="Assets\UnityHelperScripts\Tools\SubscribedEffect.cs" />
     <Compile Include="Assets\UnityHelperScripts\Tools\ToolSet.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\A_ColliderObservable.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\A_ColliderObservable2D.cs" />

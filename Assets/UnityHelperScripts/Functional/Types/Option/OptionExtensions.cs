@@ -7,6 +7,7 @@ namespace SUHScripts.Functional
 {
     public static class OptionExtensions
     {
+        //SUHS TODO: Performance updates!!
         #region CORE
         public static Option<R> Map<T, R>(this Option<T> optT, Func<T, R> f) =>
             optT.Match(

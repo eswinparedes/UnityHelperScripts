@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class PrefabPool {
+public class PrefabPool
+{
 
     Dictionary<GameObject, PoolablePrefabData> _activeList = new Dictionary<GameObject, PoolablePrefabData>();
 
     Queue<PoolablePrefabData> _inactiveList = new Queue<PoolablePrefabData>();
 
 
-	public GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation)
+    public GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation)
     {
         PoolablePrefabData data;
 
-        if(_inactiveList.Count > 0)
+        if (_inactiveList.Count > 0)
         {
             data = _inactiveList.Dequeue();
         }
@@ -21,6 +22,7 @@ public class PrefabPool {
             GameObject newGo = GameObject.Instantiate(prefab, position, rotation);
             data = new PoolablePrefabData();
             data.go = newGo;
+            newGo.GetOrAddComponent<M_PoolableObservable>();
             data.poolableComponents = newGo.GetComponentsInChildren<IPoolableComponent>();
         }
 
@@ -28,9 +30,9 @@ public class PrefabPool {
         data.go.transform.position = position;
         data.go.transform.rotation = rotation;
 
-        if(data.poolableComponents != null)
+        if (data.poolableComponents != null)
         {
-            for(int i =0; i < data.poolableComponents.Length; i++)
+            for (int i = 0; i < data.poolableComponents.Length; i++)
             {
                 data.poolableComponents[i].Spawned();
             }
@@ -51,7 +53,7 @@ public class PrefabPool {
 
         PoolablePrefabData data = _activeList[obj];
 
-        if(data.poolableComponents != null)
+        if (data.poolableComponents != null)
         {
             for (int i = 0; i < data.poolableComponents.Length; i++)
             {

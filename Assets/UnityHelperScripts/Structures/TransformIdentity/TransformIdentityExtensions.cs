@@ -32,7 +32,7 @@ public static class TransformIdentityExtensions
     public static TransformData ExtractData(this Transform @this) =>
         new TransformData(@this.position, @this.rotation, @this.localScale);
 
-    public static TransformData ExtractOrientation(this Transform @this) =>
+    public static TransformData ExtractOrientationFromData(this Transform @this) =>
         new TransformData(@this.position, @this.rotation);
 
     public static TransformData WithPosition(this TransformData @this, Vector3 position) =>

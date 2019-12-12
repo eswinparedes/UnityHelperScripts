@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[System.Obsolete]
 [System.Serializable]
 public struct TransformData
 {

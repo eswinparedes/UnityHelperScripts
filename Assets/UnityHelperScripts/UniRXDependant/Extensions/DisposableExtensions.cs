@@ -23,4 +23,13 @@ public static class DisposableExtensions
 
             @this.Clear();
         });
+
+    public static IDisposable AsDisposable(params IDisposable[] disps) =>
+        Disposable.Create(() =>
+        {
+            for (int i = 0; i < disps.Length; i++)
+            {
+                disps[i].Dispose();
+            }
+        });
 }
