@@ -330,6 +330,7 @@
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\DisposableExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\ObservableExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\SubscribeExtensions.cs" />
+    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Test\ScannerTest.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\FPSCharacter\_Root\FPSRoot.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\FPSCharacter\_Root\FPSRoot_Ext.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\FPSCharacter\_Root\RootComponents\FPSCameraRoot.cs" />

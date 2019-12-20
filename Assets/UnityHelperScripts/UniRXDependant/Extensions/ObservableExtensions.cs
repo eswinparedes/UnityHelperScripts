@@ -51,6 +51,7 @@ public static class ObservableExtensions
     public static IObservable<R> TrackTimer<T, R>(this IObservable<T> @this, float time, Func<FTimer, T, FTimer> timerUpdater, Func<FTimer, T, R> selector) =>
         @this.TrackTimer(time, timerUpdater)
         .Select(inputs => selector(inputs.timer, inputs.value));
+
     /// <summary>
     /// NOT TESTED PROPERLY from
     /// https://stackoverflow.com/questions/14697658/rx-observable-takewhile-checks-condition-before-each-element-but-i-need-to-perfo
@@ -66,4 +67,61 @@ public static class ObservableExtensions
             .Merge(source.SkipWhile(predicate).Take(1));
     }
 
+    public static IObservable<int> MergeTriggersIntoIndex<T>(params IObservable<T>[] others)
+    {
+        IObservable<int>[] selected = new IObservable<int>[others.Length];
+
+        for (int i = 0; i < others.Length; i++)
+        {
+            var iClosure = i;
+            selected[i] = others[i].Select(_ => iClosure);
+        }
+
+        return selected.Merge();
+    }
+
+    public static IObservable<(T value, FTimer timer)> TimerScan<T>(this IObservable<T> @this, Func<T, float> tickFunction, Func<FTimer> seed)
+    {
+        (T value, FTimer timer) seedInput = (default, seed());
+
+        return
+        @this.Scan(
+                seedInput,
+                (state, value) => (value, state.timer.Tick(tickFunction(value))))
+            .TakeWhile_IncludeLast(inputs => !inputs.timer.HasCompleted());
+    }
+
+    public static IObservable<R> SwitchTo<T, R>(this IObservable<T> @this, Func<T, IObservable<R>> selector) =>
+        @this.Select(selector)
+        .Switch();
+
+    public static IObservable<T> TakeWhile_IncludeLast<T>(this IObservable<T> source, Func<T, bool> predicate)
+    {
+        return Observable.Create<T>(observer =>
+        {
+            //return source.Subscribe(onNext: x => { }, onError: e => { }, onCompleted: () => { });
+            return source.Subscribe(
+                onNext: val =>
+                {
+                    var shouldContinue = false;
+                    try
+                    {
+                        shouldContinue = predicate(val);
+                    }
+                    catch (Exception e)
+                    {
+                        observer.OnError(e);
+                        return;
+                    }
+
+                    observer.OnNext(val);
+                    if (!shouldContinue)
+                    {
+                        observer.OnCompleted();
+                    }
+                },
+                onError: err => observer.OnError(err),
+                onCompleted: () => observer.OnCompleted());
+        });
+    }
 }
