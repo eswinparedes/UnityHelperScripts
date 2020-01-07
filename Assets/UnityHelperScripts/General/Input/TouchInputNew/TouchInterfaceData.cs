@@ -1,26 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Touch Interface Data")]
-public class TouchInterfaceData : ScriptableObject
+namespace SUHScripts
 {
-    public bool TapThisFrame;
-    public bool TapHeld;
-    public bool TapReleasedThisFrame;
+    [CreateAssetMenu(menuName = "Touch Interface Data")]
+    public class TouchInterfaceData : ScriptableObject
+    {
+        public bool TapThisFrame;
+        public bool TapHeld;
+        public bool TapReleasedThisFrame;
 
-    public float PinchDistanceDelta;
-    public float PinchRotationDelta;
+        public float PinchDistanceDelta;
+        public float PinchRotationDelta;
 
-    public Vector3 InputWorldPosition;
+        public Vector3 InputWorldPosition;
 
-    public Vector3 TapPositionThisFrame;
-    public Vector3 TapPositionLastFrame;
+        public Vector3 TapPositionThisFrame;
+        public Vector3 TapPositionLastFrame;
 
-    public Vector2 SwipeDirection;
-    public Vector2 SwipeMovementVector;
-    public float SwipeWidthsPerSecond;
-    public float SwipeAngleThisFrame;
+        public Vector2 SwipeDirection;
+        public Vector2 SwipeMovementVector;
+        public float SwipeWidthsPerSecond;
+        public float SwipeAngleThisFrame;
 
-    public Ray TouchScreenRay;
+        public Ray TouchScreenRay;
+    }
 }
+

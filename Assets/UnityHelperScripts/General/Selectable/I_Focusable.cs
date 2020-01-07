@@ -1,6 +1,10 @@
 ﻿
-public interface I_Focusable
+namespace SUHScripts
 {
-    void OnFocusStart();
-    void OnFocusEnd();
+    public interface I_Focusable
+    {
+        void OnFocusStart();
+        void OnFocusEnd();
+    }
 }
+

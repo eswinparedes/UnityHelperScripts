@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using static MathHelpers.MathHelper;
 using static SUHScripts.Functional.GenericExtensions;
 
-namespace MathHelpers
+namespace SUHScripts
 {
+    using static MathHelper;
+
     public static class Radial
     {
         public static RadialSectionData GetRadialSectionData(int sections)

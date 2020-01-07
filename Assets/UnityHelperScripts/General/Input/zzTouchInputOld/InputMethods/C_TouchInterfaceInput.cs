@@ -1,5 +1,8 @@
-﻿
-public abstract class C_TouchInterfaceInput{
+﻿namespace SUHScripts
+{
+    public abstract class C_TouchInterfaceInput{
 
-    public abstract void UpdateControls();
+        public abstract void UpdateControls();
+    }
+
 }

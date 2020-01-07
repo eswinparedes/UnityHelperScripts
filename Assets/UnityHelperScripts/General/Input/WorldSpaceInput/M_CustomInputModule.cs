@@ -2,462 +2,467 @@
 using UnityEngine;
 using System;
 using UnityEngine.EventSystems;
-public class M_CustomInputModule : UnityEngine.EventSystems.PointerInputModule
+
+namespace SUHScripts
 {
-    [SerializeField] A_CustomInputModuleSettings m_inputModuleSettings = default;
-
-    // The raycaster that gets to do pointer interaction (e.g. with a mouse), gaze interaction always works
-    // private OVRRaycaster _activeGraphicRaycaster;
-    [NonSerialized]
-    public CustomGraphicRaycaster activeGraphicRaycaster;
-    [Header("Dragging")]
-    [Tooltip("Minimum pointer movement in degrees to start dragging")]
-    public float angleDragThreshold = 1;
-
-    #region StandaloneInputModule code
-
-    private float m_NextAction;
-
-    protected M_CustomInputModule()
-    { }
-
-    protected new void Reset()
+    public class M_CustomInputModule : UnityEngine.EventSystems.PointerInputModule
     {
-        allowActivationOnMobileDevice = true;
-    }
+        [SerializeField] A_CustomInputModuleSettings m_inputModuleSettings = default;
 
-    [SerializeField]
-    private float m_InputActionsPerSecond = 10;
+        // The raycaster that gets to do pointer interaction (e.g. with a mouse), gaze interaction always works
+        // private OVRRaycaster _activeGraphicRaycaster;
+        [NonSerialized]
+        public CustomGraphicRaycaster activeGraphicRaycaster;
+        [Header("Dragging")]
+        [Tooltip("Minimum pointer movement in degrees to start dragging")]
+        public float angleDragThreshold = 1;
 
-    [SerializeField]
-    private bool m_AllowActivationOnMobileDevice;
+        #region StandaloneInputModule code
 
-    public bool allowActivationOnMobileDevice
-    {
-        get { return m_AllowActivationOnMobileDevice; }
-        set { m_AllowActivationOnMobileDevice = value; }
-    }
+        private float m_NextAction;
 
-    public float inputActionsPerSecond
-    {
-        get { return m_InputActionsPerSecond; }
-        set { m_InputActionsPerSecond = value; }
-    }
+        protected M_CustomInputModule()
+        { }
 
-    public override bool ShouldActivateModule()
-    {
-        if (!base.ShouldActivateModule())
-            return false;
-
-        var shouldActivate = m_inputModuleSettings.SubmitCondition;
-        shouldActivate |= m_inputModuleSettings.CancelCondition;
-        shouldActivate |= !Mathf.Approximately(m_inputModuleSettings.HorizontalAxis, 0.0f);
-        shouldActivate |= !Mathf.Approximately(m_inputModuleSettings.VerticalAxis, 0.0f);
-
-        return shouldActivate;
-    }
-
-    public override void ActivateModule()
-    {
-        base.ActivateModule();
-
-        var toSelect = eventSystem.currentSelectedGameObject;
-        if (toSelect == null)
-            toSelect = eventSystem.firstSelectedGameObject;
-
-        eventSystem.SetSelectedGameObject(toSelect, GetBaseEventData());
-    }
-
-    public override void DeactivateModule()
-    {
-        base.DeactivateModule();
-        ClearSelection();
-    }
-    /// <summary>
-    /// Process submit keys.
-    /// </summary>
-    private bool SendSubmitEventToSelectedObject()
-    {
-        if (eventSystem.currentSelectedGameObject == null)
-            return false;
-
-        var data = GetBaseEventData();
-        if (m_inputModuleSettings.SubmitCondition)
-            UnityEngine.EventSystems.ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, data, UnityEngine.EventSystems.ExecuteEvents.submitHandler);
-
-        if (m_inputModuleSettings.CancelCondition)
-            UnityEngine.EventSystems.ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, data, UnityEngine.EventSystems.ExecuteEvents.cancelHandler);
-        return data.used;
-    }
-
-    #region Move
-    private bool AllowMoveEventProcessing(float time)
-    {
-        bool allow = m_inputModuleSettings.HorizontalAxisThisFrame;
-        allow |= m_inputModuleSettings.VerticalAxisThisFrame;
-        allow |= (time > m_NextAction);
-        return allow;
-    }
-
-    private Vector2 GetRawMoveVector()
-    {
-        Vector2 move = Vector2.zero;
-        move.x = m_inputModuleSettings.HorizontalAxis;
-        move.y = m_inputModuleSettings.VerticalAxis;
-
-        if (m_inputModuleSettings.HorizontalAxisThisFrame)
+        protected new void Reset()
         {
-            if (move.x < 0)
-                move.x = -1f;
-            if (move.x > 0)
-                move.x = 1f;
+            allowActivationOnMobileDevice = true;
         }
-        if (m_inputModuleSettings.VerticalAxisThisFrame)
+
+        [SerializeField]
+        private float m_InputActionsPerSecond = 10;
+
+        [SerializeField]
+        private bool m_AllowActivationOnMobileDevice;
+
+        public bool allowActivationOnMobileDevice
         {
-            if (move.y < 0)
-                move.y = -1f;
-            if (move.y > 0)
-                move.y = 1f;
+            get { return m_AllowActivationOnMobileDevice; }
+            set { m_AllowActivationOnMobileDevice = value; }
         }
-        return move;
-    }
 
-    /// <summary>
-    /// Process keyboard events.
-    /// </summary>
-    private bool SendMoveEventToSelectedObject()
-    {
-        float time = Time.unscaledTime;
-
-        if (!AllowMoveEventProcessing(time))
-            return false;
-
-        Vector2 movement = GetRawMoveVector();
-        // Debug.Log(m_ProcessingEvent.rawType + " axis:" + m_AllowAxisEvents + " value:" + "(" + x + "," + y + ")");
-        var axisEventData = GetAxisEventData(movement.x, movement.y, 0.6f);
-        if (!Mathf.Approximately(axisEventData.moveVector.x, 0f)
-            || !Mathf.Approximately(axisEventData.moveVector.y, 0f))
+        public float inputActionsPerSecond
         {
-            UnityEngine.EventSystems.ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, axisEventData, UnityEngine.EventSystems.ExecuteEvents.moveHandler);
+            get { return m_InputActionsPerSecond; }
+            set { m_InputActionsPerSecond = value; }
         }
-        m_NextAction = time + 1f / m_InputActionsPerSecond;
-        return axisEventData.used;
-    }
-    #endregion
 
-    private bool SendUpdateEventToSelectedObject()
-    {
-        if (eventSystem.currentSelectedGameObject == null)
-            return false;
-
-        var data = GetBaseEventData();
-        UnityEngine.EventSystems.ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, data, UnityEngine.EventSystems.ExecuteEvents.updateSelectedHandler);
-        return data.used;
-    }
-
-    /// <summary>
-    /// Process the current mouse press.
-    /// </summary>
-    private void ProcessMousePress(MouseButtonEventData data)
-    {
-        var pointerEvent = data.buttonData;
-        var currentOverGo = pointerEvent.pointerCurrentRaycast.gameObject;
-        
-        // PointerDown notification
-        if (data.PressedThisFrame())
+        public override bool ShouldActivateModule()
         {
-            pointerEvent.eligibleForClick = true;
-            pointerEvent.delta = Vector2.zero;
-            pointerEvent.dragging = false;
-            pointerEvent.useDragThreshold = true;
-            pointerEvent.pressPosition = pointerEvent.position;
-            pointerEvent.pointerPressRaycast = pointerEvent.pointerCurrentRaycast;
+            if (!base.ShouldActivateModule())
+                return false;
 
-            DeselectIfSelectionChanged(currentOverGo, pointerEvent);
+            var shouldActivate = m_inputModuleSettings.SubmitCondition;
+            shouldActivate |= m_inputModuleSettings.CancelCondition;
+            shouldActivate |= !Mathf.Approximately(m_inputModuleSettings.HorizontalAxis, 0.0f);
+            shouldActivate |= !Mathf.Approximately(m_inputModuleSettings.VerticalAxis, 0.0f);
 
-            // search for the control that will receive the press
-            // if we can't find a press handler set the press
-            // handler to be what would receive a click.
-            var newPressed = UnityEngine.EventSystems.ExecuteEvents.ExecuteHierarchy(currentOverGo, pointerEvent, ExecuteEvents.pointerDownHandler);
+            return shouldActivate;
+        }
 
-            // didnt find a press handler... search for a click handler
-            if (newPressed == null)
-                newPressed = UnityEngine.EventSystems.ExecuteEvents.GetEventHandler<UnityEngine.EventSystems.IPointerClickHandler>(currentOverGo);
+        public override void ActivateModule()
+        {
+            base.ActivateModule();
 
-            // Debug.Log("Pressed: " + newPressed);
+            var toSelect = eventSystem.currentSelectedGameObject;
+            if (toSelect == null)
+                toSelect = eventSystem.firstSelectedGameObject;
 
+            eventSystem.SetSelectedGameObject(toSelect, GetBaseEventData());
+        }
+
+        public override void DeactivateModule()
+        {
+            base.DeactivateModule();
+            ClearSelection();
+        }
+        /// <summary>
+        /// Process submit keys.
+        /// </summary>
+        private bool SendSubmitEventToSelectedObject()
+        {
+            if (eventSystem.currentSelectedGameObject == null)
+                return false;
+
+            var data = GetBaseEventData();
+            if (m_inputModuleSettings.SubmitCondition)
+                UnityEngine.EventSystems.ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, data, UnityEngine.EventSystems.ExecuteEvents.submitHandler);
+
+            if (m_inputModuleSettings.CancelCondition)
+                UnityEngine.EventSystems.ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, data, UnityEngine.EventSystems.ExecuteEvents.cancelHandler);
+            return data.used;
+        }
+
+        #region Move
+        private bool AllowMoveEventProcessing(float time)
+        {
+            bool allow = m_inputModuleSettings.HorizontalAxisThisFrame;
+            allow |= m_inputModuleSettings.VerticalAxisThisFrame;
+            allow |= (time > m_NextAction);
+            return allow;
+        }
+
+        private Vector2 GetRawMoveVector()
+        {
+            Vector2 move = Vector2.zero;
+            move.x = m_inputModuleSettings.HorizontalAxis;
+            move.y = m_inputModuleSettings.VerticalAxis;
+
+            if (m_inputModuleSettings.HorizontalAxisThisFrame)
+            {
+                if (move.x < 0)
+                    move.x = -1f;
+                if (move.x > 0)
+                    move.x = 1f;
+            }
+            if (m_inputModuleSettings.VerticalAxisThisFrame)
+            {
+                if (move.y < 0)
+                    move.y = -1f;
+                if (move.y > 0)
+                    move.y = 1f;
+            }
+            return move;
+        }
+
+        /// <summary>
+        /// Process keyboard events.
+        /// </summary>
+        private bool SendMoveEventToSelectedObject()
+        {
             float time = Time.unscaledTime;
 
-            if (newPressed == pointerEvent.lastPress)
+            if (!AllowMoveEventProcessing(time))
+                return false;
+
+            Vector2 movement = GetRawMoveVector();
+            // Debug.Log(m_ProcessingEvent.rawType + " axis:" + m_AllowAxisEvents + " value:" + "(" + x + "," + y + ")");
+            var axisEventData = GetAxisEventData(movement.x, movement.y, 0.6f);
+            if (!Mathf.Approximately(axisEventData.moveVector.x, 0f)
+                || !Mathf.Approximately(axisEventData.moveVector.y, 0f))
             {
-                var diffTime = time - pointerEvent.clickTime;
-                if (diffTime < 0.3f)
-                    ++pointerEvent.clickCount;
+                UnityEngine.EventSystems.ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, axisEventData, UnityEngine.EventSystems.ExecuteEvents.moveHandler);
+            }
+            m_NextAction = time + 1f / m_InputActionsPerSecond;
+            return axisEventData.used;
+        }
+        #endregion
+
+        private bool SendUpdateEventToSelectedObject()
+        {
+            if (eventSystem.currentSelectedGameObject == null)
+                return false;
+
+            var data = GetBaseEventData();
+            UnityEngine.EventSystems.ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, data, UnityEngine.EventSystems.ExecuteEvents.updateSelectedHandler);
+            return data.used;
+        }
+
+        /// <summary>
+        /// Process the current mouse press.
+        /// </summary>
+        private void ProcessMousePress(MouseButtonEventData data)
+        {
+            var pointerEvent = data.buttonData;
+            var currentOverGo = pointerEvent.pointerCurrentRaycast.gameObject;
+        
+            // PointerDown notification
+            if (data.PressedThisFrame())
+            {
+                pointerEvent.eligibleForClick = true;
+                pointerEvent.delta = Vector2.zero;
+                pointerEvent.dragging = false;
+                pointerEvent.useDragThreshold = true;
+                pointerEvent.pressPosition = pointerEvent.position;
+                pointerEvent.pointerPressRaycast = pointerEvent.pointerCurrentRaycast;
+
+                DeselectIfSelectionChanged(currentOverGo, pointerEvent);
+
+                // search for the control that will receive the press
+                // if we can't find a press handler set the press
+                // handler to be what would receive a click.
+                var newPressed = UnityEngine.EventSystems.ExecuteEvents.ExecuteHierarchy(currentOverGo, pointerEvent, ExecuteEvents.pointerDownHandler);
+
+                // didnt find a press handler... search for a click handler
+                if (newPressed == null)
+                    newPressed = UnityEngine.EventSystems.ExecuteEvents.GetEventHandler<UnityEngine.EventSystems.IPointerClickHandler>(currentOverGo);
+
+                // Debug.Log("Pressed: " + newPressed);
+
+                float time = Time.unscaledTime;
+
+                if (newPressed == pointerEvent.lastPress)
+                {
+                    var diffTime = time - pointerEvent.clickTime;
+                    if (diffTime < 0.3f)
+                        ++pointerEvent.clickCount;
+                    else
+                        pointerEvent.clickCount = 1;
+
+                    pointerEvent.clickTime = time;
+                }
                 else
+                {
                     pointerEvent.clickCount = 1;
+                }
+
+                pointerEvent.pointerPress = newPressed;
+                pointerEvent.rawPointerPress = currentOverGo;
 
                 pointerEvent.clickTime = time;
-            }
-            else
-            {
-                pointerEvent.clickCount = 1;
-            }
 
-            pointerEvent.pointerPress = newPressed;
-            pointerEvent.rawPointerPress = currentOverGo;
+                // Save the drag handler as well
+                pointerEvent.pointerDrag = UnityEngine.EventSystems.ExecuteEvents.GetEventHandler<UnityEngine.EventSystems.IDragHandler>(currentOverGo);
 
-            pointerEvent.clickTime = time;
-
-            // Save the drag handler as well
-            pointerEvent.pointerDrag = UnityEngine.EventSystems.ExecuteEvents.GetEventHandler<UnityEngine.EventSystems.IDragHandler>(currentOverGo);
-
-            if (pointerEvent.pointerDrag != null)
-                UnityEngine.EventSystems.ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, UnityEngine.EventSystems.ExecuteEvents.initializePotentialDrag);
-        }
-
-        // PointerUp notification
-        if (data.ReleasedThisFrame())
-        {
-            UnityEngine.EventSystems.ExecuteEvents.Execute(pointerEvent.pointerPress, pointerEvent, UnityEngine.EventSystems.ExecuteEvents.pointerUpHandler);
-
-            // see if we mouse up on the same element that we clicked on...
-            var pointerUpHandler = UnityEngine.EventSystems.ExecuteEvents.GetEventHandler<UnityEngine.EventSystems.IPointerClickHandler>(currentOverGo);
-
-            // PointerClick and Drop events
-            if (pointerEvent.pointerPress == pointerUpHandler && pointerEvent.eligibleForClick)
-            {
-                UnityEngine.EventSystems.ExecuteEvents.Execute(pointerEvent.pointerPress, pointerEvent, UnityEngine.EventSystems.ExecuteEvents.pointerClickHandler);
-            }
-            else if (pointerEvent.pointerDrag != null)
-            {
-                UnityEngine.EventSystems.ExecuteEvents.ExecuteHierarchy(currentOverGo, pointerEvent, UnityEngine.EventSystems.ExecuteEvents.dropHandler);
+                if (pointerEvent.pointerDrag != null)
+                    UnityEngine.EventSystems.ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, UnityEngine.EventSystems.ExecuteEvents.initializePotentialDrag);
             }
 
-            pointerEvent.eligibleForClick = false;
-            pointerEvent.pointerPress = null;
-            pointerEvent.rawPointerPress = null;
-
-            if (pointerEvent.pointerDrag != null && pointerEvent.dragging)
-                UnityEngine.EventSystems.ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, UnityEngine.EventSystems.ExecuteEvents.endDragHandler);
-
-            pointerEvent.dragging = false;
-            pointerEvent.pointerDrag = null;
-
-            // redo pointer enter / exit to refresh state
-            // so that if we moused over somethign that ignored it before
-            // due to having pressed on something else
-            // it now gets it.
-            if (currentOverGo != pointerEvent.pointerEnter)
+            // PointerUp notification
+            if (data.ReleasedThisFrame())
             {
-                HandlePointerExitAndEnter(pointerEvent, null);
-                HandlePointerExitAndEnter(pointerEvent, currentOverGo);
-            }
-        }
-    }
-    #endregion
-    #region Modified StandaloneInputModule methods
+                UnityEngine.EventSystems.ExecuteEvents.Execute(pointerEvent.pointerPress, pointerEvent, UnityEngine.EventSystems.ExecuteEvents.pointerUpHandler);
 
-    /// <summary>
-    /// Takes in the emulated MouseState 'mouseData' and processes it, 'mouseData' can be
-    /// emulated from vr input
-    /// formerly: ProcessMouseEvent
-    /// </summary>
-    private void ProcessMouseEvent(MouseState mouseData)
-    {
-        var pressed = mouseData.AnyPressesThisFrame();
-        var released = mouseData.AnyReleasesThisFrame();
+                // see if we mouse up on the same element that we clicked on...
+                var pointerUpHandler = UnityEngine.EventSystems.ExecuteEvents.GetEventHandler<UnityEngine.EventSystems.IPointerClickHandler>(currentOverGo);
 
-        var leftButtonData = mouseData.GetButtonState(UnityEngine.EventSystems.PointerEventData.InputButton.Left).eventData;
-
-        // Process the first mouse button fully
-        ProcessMousePress(leftButtonData);
-        ProcessMove(leftButtonData.buttonData);
-        ProcessDrag(leftButtonData.buttonData);
-
-        if (!Mathf.Approximately(leftButtonData.buttonData.scrollDelta.sqrMagnitude, 0.0f))
-        {
-            var scrollHandler = UnityEngine.EventSystems.ExecuteEvents.GetEventHandler<UnityEngine.EventSystems.IScrollHandler>(leftButtonData.buttonData.pointerCurrentRaycast.gameObject);
-            UnityEngine.EventSystems.ExecuteEvents.ExecuteHierarchy(scrollHandler, leftButtonData.buttonData, UnityEngine.EventSystems.ExecuteEvents.scrollHandler);
-        }
-    }
-
-    /// <summary>
-    /// Process this InputModule. Same as the StandaloneInputModule version, except that it calls
-    /// ProcessMouseEvent twice, once for gaze pointers, and once for mouse pointers.
-    /// </summary>
-    public override void Process()
-    {
-        bool usedEvent = SendUpdateEventToSelectedObject();
-
-        if (eventSystem.sendNavigationEvents)
-        {
-            if (!usedEvent)
-                usedEvent |= SendMoveEventToSelectedObject();
-
-            if (!usedEvent)
-                SendSubmitEventToSelectedObject();
-        }
-
-        ProcessMouseEvent(GetWorldSpaceControlledPointerData());
-
-        m_inputModuleSettings.InvokeOnInputModuleProcessComplete();
-    }
-
-    #endregion
-
-    #region PointerEventData pool
-    /// <summary>
-    /// Clear pointer state for both types of pointer
-    /// </summary>
-    protected new void ClearSelection()
-    {
-        var baseEventData = GetBaseEventData();
-        HandlePointerExitAndEnter(m_customRayPointerEventData, null);
-        eventSystem.SetSelectedGameObject(null, baseEventData);
-    }
-    #endregion
-
-    /// <summary>
-    /// For RectTransform, calculate it's normal in world space
-    /// </summary>
-    static Vector3 GetRectTransformNormal(RectTransform rectTransform)
-    {
-        Vector3[] corners = new Vector3[4];
-        rectTransform.GetWorldCorners(corners);
-        Vector3 BottomEdge = corners[3] - corners[0];
-        Vector3 LeftEdge = corners[1] - corners[0];
-        rectTransform.GetWorldCorners(corners);
-        return Vector3.Cross(LeftEdge, BottomEdge).normalized;
-    }
-
-    private readonly MouseState m_MouseState = new MouseState();
-
-    CustomRayPointerEventData m_customRayPointerEventData;
-
-    // The following 2 functions are equivalent to PointerInputModule.GetMousePointerEventData but are customized to
-    // get data for ray pointers and canvas mouse pointers.
-    /// <summary>
-    /// Get Mouse State for world space ray
-    /// </summary>
-    /// <returns></returns>
-    protected MouseState GetWorldSpaceControlledPointerData()
-    {
-        m_customRayPointerEventData = m_customRayPointerEventData??
-            new CustomRayPointerEventData(eventSystem)
-            { pointerId=  kMouseLeftId};
-
-        m_customRayPointerEventData.Reset();
-
-        //This ray will be used for testing against canvas
-        m_customRayPointerEventData.worldSpaceRay = m_inputModuleSettings.InputRay;
-
-        m_customRayPointerEventData.button = UnityEngine.EventSystems.PointerEventData.InputButton.Left;
-        m_customRayPointerEventData.useDragThreshold = true;
-
-        // Perform raycast to find intersections with world
-        eventSystem.RaycastAll(m_customRayPointerEventData, m_RaycastResultCache);
-        RaycastResult raycast = FindFirstRaycast(m_RaycastResultCache);
-        raycast = m_inputModuleSettings.InvokeGetProcessedResult(raycast);
-        //ADDED
-        m_inputModuleSettings.InputRaycastResult = new List<RaycastResult>(m_RaycastResultCache);
-
-        m_customRayPointerEventData.pointerCurrentRaycast = raycast;
-        m_RaycastResultCache.Clear();
-
-        CustomGraphicRaycaster graphicsRaycaster = raycast.module as CustomGraphicRaycaster;
-        // We're only interested in intersections from graphicsRaycasters
-        if (graphicsRaycaster)
-        {
-            // The Unity UI system expects event data to have a screen position
-            // so even though this raycast came from a world space ray we must get a screen
-            // space position for the camera attached to this raycaster for compatability
-            m_customRayPointerEventData.position = graphicsRaycaster.GetScreenPosition(raycast);
-        }
-
-        m_MouseState.SetButtonState(UnityEngine.EventSystems.PointerEventData.InputButton.Left, GetPointerButtonFrameState(), m_customRayPointerEventData);
-
-        return m_MouseState;
-    }
-    /// <summary>
-    /// New version of ShouldStartDrag implemented first in PointerInputModule. This version differs in that
-    /// for ray based pointers it makes a decision about whether a drag should start based on the angular change
-    /// the pointer has made so far, as seen from the camera. This also works when the world space ray is 
-    /// translated rather than rotated, since the beginning and end of the movement are considered as angle from
-    /// the same point.
-    /// </summary>
-    private bool ShouldStartDrag(UnityEngine.EventSystems.PointerEventData pointerEvent)
-    {
-        if (!pointerEvent.useDragThreshold)
-            return true;
-
-        if (pointerEvent as CustomRayPointerEventData == null)
-        {
-            // Same as original behaviour for canvas based pointers
-            return (pointerEvent.pressPosition - pointerEvent.position).sqrMagnitude >= eventSystem.pixelDragThreshold * eventSystem.pixelDragThreshold;
-        }
-        else
-        {
-            // When it's not a screen space pointer we have to look at the angle it moved rather than the pixels distance
-            // For gaze based pointing screen-space distance moved will always be near 0
-            Vector3 cameraPos = pointerEvent.pressEventCamera.transform.position;
-            Vector3 pressDir = (pointerEvent.pointerPressRaycast.worldPosition - cameraPos).normalized;
-            Vector3 currentDir = (pointerEvent.pointerCurrentRaycast.worldPosition - cameraPos).normalized;
-            return Vector3.Dot(pressDir, currentDir) < Mathf.Cos(Mathf.Deg2Rad * (angleDragThreshold));
-        }
-    }
-
-    protected override void ProcessDrag(UnityEngine.EventSystems.PointerEventData pointerEvent)
-    {
-        //we'll assume we determined pointer is moving already
-        //bool moving = IsPointerMoving(pointerEvent);
-        if (pointerEvent.pointerDrag != null
-            && !pointerEvent.dragging
-            && ShouldStartDrag(pointerEvent))
-        {
-            ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, ExecuteEvents.beginDragHandler);
-            pointerEvent.dragging = true;
-        }
-
-        // Drag notification
-        if (pointerEvent.dragging && pointerEvent.pointerDrag != null)
-        {
-            // Before doing drag we should cancel any pointer down state
-            // And clear selection!
-            if (pointerEvent.pointerPress != pointerEvent.pointerDrag)
-            {
-                UnityEngine.EventSystems.ExecuteEvents.Execute(pointerEvent.pointerPress, pointerEvent, ExecuteEvents.pointerUpHandler);
+                // PointerClick and Drop events
+                if (pointerEvent.pointerPress == pointerUpHandler && pointerEvent.eligibleForClick)
+                {
+                    UnityEngine.EventSystems.ExecuteEvents.Execute(pointerEvent.pointerPress, pointerEvent, UnityEngine.EventSystems.ExecuteEvents.pointerClickHandler);
+                }
+                else if (pointerEvent.pointerDrag != null)
+                {
+                    UnityEngine.EventSystems.ExecuteEvents.ExecuteHierarchy(currentOverGo, pointerEvent, UnityEngine.EventSystems.ExecuteEvents.dropHandler);
+                }
 
                 pointerEvent.eligibleForClick = false;
                 pointerEvent.pointerPress = null;
                 pointerEvent.rawPointerPress = null;
+
+                if (pointerEvent.pointerDrag != null && pointerEvent.dragging)
+                    UnityEngine.EventSystems.ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, UnityEngine.EventSystems.ExecuteEvents.endDragHandler);
+
+                pointerEvent.dragging = false;
+                pointerEvent.pointerDrag = null;
+
+                // redo pointer enter / exit to refresh state
+                // so that if we moused over somethign that ignored it before
+                // due to having pressed on something else
+                // it now gets it.
+                if (currentOverGo != pointerEvent.pointerEnter)
+                {
+                    HandlePointerExitAndEnter(pointerEvent, null);
+                    HandlePointerExitAndEnter(pointerEvent, currentOverGo);
+                }
             }
-            UnityEngine.EventSystems.ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, ExecuteEvents.dragHandler);
         }
-    }
+        #endregion
+        #region Modified StandaloneInputModule methods
 
-    /// <summary>
-    /// Get pressed/released state of conditions and return corresponding pointerevent data framePressState
-    /// formerly: GetGazeButtonState()
-    /// </summary>
-    /// <returns></returns>
-    protected UnityEngine.EventSystems.PointerEventData.FramePressState GetPointerButtonFrameState()
-    {
+        /// <summary>
+        /// Takes in the emulated MouseState 'mouseData' and processes it, 'mouseData' can be
+        /// emulated from vr input
+        /// formerly: ProcessMouseEvent
+        /// </summary>
+        private void ProcessMouseEvent(MouseState mouseData)
+        {
+            var pressed = mouseData.AnyPressesThisFrame();
+            var released = mouseData.AnyReleasesThisFrame();
 
-        if (m_inputModuleSettings.PressedCondition && m_inputModuleSettings.ReleasedCondition)
-        {
-            return UnityEngine.EventSystems.PointerEventData.FramePressState.PressedAndReleased;
-        }
-        if (m_inputModuleSettings.PressedCondition)
-        {
-            return UnityEngine.EventSystems.PointerEventData.FramePressState.Pressed;
-        }
-        if (m_inputModuleSettings.ReleasedCondition)
-        {
-            return UnityEngine.EventSystems.PointerEventData.FramePressState.Released;
+            var leftButtonData = mouseData.GetButtonState(UnityEngine.EventSystems.PointerEventData.InputButton.Left).eventData;
+
+            // Process the first mouse button fully
+            ProcessMousePress(leftButtonData);
+            ProcessMove(leftButtonData.buttonData);
+            ProcessDrag(leftButtonData.buttonData);
+
+            if (!Mathf.Approximately(leftButtonData.buttonData.scrollDelta.sqrMagnitude, 0.0f))
+            {
+                var scrollHandler = UnityEngine.EventSystems.ExecuteEvents.GetEventHandler<UnityEngine.EventSystems.IScrollHandler>(leftButtonData.buttonData.pointerCurrentRaycast.gameObject);
+                UnityEngine.EventSystems.ExecuteEvents.ExecuteHierarchy(scrollHandler, leftButtonData.buttonData, UnityEngine.EventSystems.ExecuteEvents.scrollHandler);
+            }
         }
 
-        return UnityEngine.EventSystems.PointerEventData.FramePressState.NotChanged;
-    }
+        /// <summary>
+        /// Process this InputModule. Same as the StandaloneInputModule version, except that it calls
+        /// ProcessMouseEvent twice, once for gaze pointers, and once for mouse pointers.
+        /// </summary>
+        public override void Process()
+        {
+            bool usedEvent = SendUpdateEventToSelectedObject();
+
+            if (eventSystem.sendNavigationEvents)
+            {
+                if (!usedEvent)
+                    usedEvent |= SendMoveEventToSelectedObject();
+
+                if (!usedEvent)
+                    SendSubmitEventToSelectedObject();
+            }
+
+            ProcessMouseEvent(GetWorldSpaceControlledPointerData());
+
+            m_inputModuleSettings.InvokeOnInputModuleProcessComplete();
+        }
+
+        #endregion
+
+        #region PointerEventData pool
+        /// <summary>
+        /// Clear pointer state for both types of pointer
+        /// </summary>
+        protected new void ClearSelection()
+        {
+            var baseEventData = GetBaseEventData();
+            HandlePointerExitAndEnter(m_customRayPointerEventData, null);
+            eventSystem.SetSelectedGameObject(null, baseEventData);
+        }
+        #endregion
+
+        /// <summary>
+        /// For RectTransform, calculate it's normal in world space
+        /// </summary>
+        static Vector3 GetRectTransformNormal(RectTransform rectTransform)
+        {
+            Vector3[] corners = new Vector3[4];
+            rectTransform.GetWorldCorners(corners);
+            Vector3 BottomEdge = corners[3] - corners[0];
+            Vector3 LeftEdge = corners[1] - corners[0];
+            rectTransform.GetWorldCorners(corners);
+            return Vector3.Cross(LeftEdge, BottomEdge).normalized;
+        }
+
+        private readonly MouseState m_MouseState = new MouseState();
+
+        CustomRayPointerEventData m_customRayPointerEventData;
+
+        // The following 2 functions are equivalent to PointerInputModule.GetMousePointerEventData but are customized to
+        // get data for ray pointers and canvas mouse pointers.
+        /// <summary>
+        /// Get Mouse State for world space ray
+        /// </summary>
+        /// <returns></returns>
+        protected MouseState GetWorldSpaceControlledPointerData()
+        {
+            m_customRayPointerEventData = m_customRayPointerEventData??
+                new CustomRayPointerEventData(eventSystem)
+                { pointerId=  kMouseLeftId};
+
+            m_customRayPointerEventData.Reset();
+
+            //This ray will be used for testing against canvas
+            m_customRayPointerEventData.worldSpaceRay = m_inputModuleSettings.InputRay;
+
+            m_customRayPointerEventData.button = UnityEngine.EventSystems.PointerEventData.InputButton.Left;
+            m_customRayPointerEventData.useDragThreshold = true;
+
+            // Perform raycast to find intersections with world
+            eventSystem.RaycastAll(m_customRayPointerEventData, m_RaycastResultCache);
+            RaycastResult raycast = FindFirstRaycast(m_RaycastResultCache);
+            raycast = m_inputModuleSettings.InvokeGetProcessedResult(raycast);
+            //ADDED
+            m_inputModuleSettings.InputRaycastResult = new List<RaycastResult>(m_RaycastResultCache);
+
+            m_customRayPointerEventData.pointerCurrentRaycast = raycast;
+            m_RaycastResultCache.Clear();
+
+            CustomGraphicRaycaster graphicsRaycaster = raycast.module as CustomGraphicRaycaster;
+            // We're only interested in intersections from graphicsRaycasters
+            if (graphicsRaycaster)
+            {
+                // The Unity UI system expects event data to have a screen position
+                // so even though this raycast came from a world space ray we must get a screen
+                // space position for the camera attached to this raycaster for compatability
+                m_customRayPointerEventData.position = graphicsRaycaster.GetScreenPosition(raycast);
+            }
+
+            m_MouseState.SetButtonState(UnityEngine.EventSystems.PointerEventData.InputButton.Left, GetPointerButtonFrameState(), m_customRayPointerEventData);
+
+            return m_MouseState;
+        }
+        /// <summary>
+        /// New version of ShouldStartDrag implemented first in PointerInputModule. This version differs in that
+        /// for ray based pointers it makes a decision about whether a drag should start based on the angular change
+        /// the pointer has made so far, as seen from the camera. This also works when the world space ray is 
+        /// translated rather than rotated, since the beginning and end of the movement are considered as angle from
+        /// the same point.
+        /// </summary>
+        private bool ShouldStartDrag(UnityEngine.EventSystems.PointerEventData pointerEvent)
+        {
+            if (!pointerEvent.useDragThreshold)
+                return true;
+
+            if (pointerEvent as CustomRayPointerEventData == null)
+            {
+                // Same as original behaviour for canvas based pointers
+                return (pointerEvent.pressPosition - pointerEvent.position).sqrMagnitude >= eventSystem.pixelDragThreshold * eventSystem.pixelDragThreshold;
+            }
+            else
+            {
+                // When it's not a screen space pointer we have to look at the angle it moved rather than the pixels distance
+                // For gaze based pointing screen-space distance moved will always be near 0
+                Vector3 cameraPos = pointerEvent.pressEventCamera.transform.position;
+                Vector3 pressDir = (pointerEvent.pointerPressRaycast.worldPosition - cameraPos).normalized;
+                Vector3 currentDir = (pointerEvent.pointerCurrentRaycast.worldPosition - cameraPos).normalized;
+                return Vector3.Dot(pressDir, currentDir) < Mathf.Cos(Mathf.Deg2Rad * (angleDragThreshold));
+            }
+        }
+
+        protected override void ProcessDrag(UnityEngine.EventSystems.PointerEventData pointerEvent)
+        {
+            //we'll assume we determined pointer is moving already
+            //bool moving = IsPointerMoving(pointerEvent);
+            if (pointerEvent.pointerDrag != null
+                && !pointerEvent.dragging
+                && ShouldStartDrag(pointerEvent))
+            {
+                ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, ExecuteEvents.beginDragHandler);
+                pointerEvent.dragging = true;
+            }
+
+            // Drag notification
+            if (pointerEvent.dragging && pointerEvent.pointerDrag != null)
+            {
+                // Before doing drag we should cancel any pointer down state
+                // And clear selection!
+                if (pointerEvent.pointerPress != pointerEvent.pointerDrag)
+                {
+                    UnityEngine.EventSystems.ExecuteEvents.Execute(pointerEvent.pointerPress, pointerEvent, ExecuteEvents.pointerUpHandler);
+
+                    pointerEvent.eligibleForClick = false;
+                    pointerEvent.pointerPress = null;
+                    pointerEvent.rawPointerPress = null;
+                }
+                UnityEngine.EventSystems.ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, ExecuteEvents.dragHandler);
+            }
+        }
+
+        /// <summary>
+        /// Get pressed/released state of conditions and return corresponding pointerevent data framePressState
+        /// formerly: GetGazeButtonState()
+        /// </summary>
+        /// <returns></returns>
+        protected UnityEngine.EventSystems.PointerEventData.FramePressState GetPointerButtonFrameState()
+        {
+
+            if (m_inputModuleSettings.PressedCondition && m_inputModuleSettings.ReleasedCondition)
+            {
+                return UnityEngine.EventSystems.PointerEventData.FramePressState.PressedAndReleased;
+            }
+            if (m_inputModuleSettings.PressedCondition)
+            {
+                return UnityEngine.EventSystems.PointerEventData.FramePressState.Pressed;
+            }
+            if (m_inputModuleSettings.ReleasedCondition)
+            {
+                return UnityEngine.EventSystems.PointerEventData.FramePressState.Released;
+            }
+
+            return UnityEngine.EventSystems.PointerEventData.FramePressState.NotChanged;
+        }
+}
+
 
     /*Original--------------------------------------------------
     [SerializeField] A_CustomInputModuleSettings m_inputModuleSettings;

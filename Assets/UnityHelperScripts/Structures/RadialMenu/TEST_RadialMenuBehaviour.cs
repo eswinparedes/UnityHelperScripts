@@ -1,26 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class TEST_RadialMenuBehaviour : MonoBehaviour
+namespace SUHScripts
 {
-    [SerializeField] RadialMenuBehaviour m_radialMenu = default;
-    [SerializeField] SO_A_Bool m_actionBehaviour = default;
-
-    Vector2 input => new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-
-    void Start()
+    public class TEST_RadialMenuBehaviour : MonoBehaviour
     {
-        m_radialMenu.Initialize();
-    }
+        [SerializeField] RadialMenuBehaviour m_radialMenu = default;
+        [SerializeField] SO_A_Bool m_actionBehaviour = default;
 
-    // Update is called once per frame
-    void Update()
-    {
-        m_radialMenu.Update(new Vector2(input.x, input.y));
-        if (m_actionBehaviour.IsTrue)
+        Vector2 input => new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+
+        void Start()
         {
-            m_radialMenu.RequestActionOnSelectedRadialObject();
+            m_radialMenu.Initialize();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            m_radialMenu.Update(new Vector2(input.x, input.y));
+            if (m_actionBehaviour.IsTrue)
+            {
+                m_radialMenu.RequestActionOnSelectedRadialObject();
+            }
         }
     }
 }

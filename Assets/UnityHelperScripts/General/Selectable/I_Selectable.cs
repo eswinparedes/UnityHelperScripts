@@ -1,6 +1,9 @@
 ﻿
-public interface I_Selectable
+namespace SUHScripts
 {
-    void OnSelectStart();
-    void OnSelectEnd();
+    public interface I_Selectable
+    {
+        void OnSelectStart();
+        void OnSelectEnd();
+    }
 }

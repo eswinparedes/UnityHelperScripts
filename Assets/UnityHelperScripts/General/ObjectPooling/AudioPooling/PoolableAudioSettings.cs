@@ -2,23 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct PoolableAudioSettings
+namespace SUHScripts
 {
-    public float volume;
-    public float pitch;
-    public float spatialBlend;
-
-    public PoolableAudioSettings(float volume, float pitch)
+    public struct PoolableAudioSettings
     {
-        this.volume = volume;
-        this.pitch = pitch;
-        this.spatialBlend = 0;
-    }
+        public float volume;
+        public float pitch;
+        public float spatialBlend;
 
-    public PoolableAudioSettings(float volume, float pitch, float spatialBlend)
-    {
-        this.volume = volume;
-        this.pitch = pitch;
-        this.spatialBlend = spatialBlend;
+        public PoolableAudioSettings(float volume, float pitch)
+        {
+            this.volume = volume;
+            this.pitch = pitch;
+            this.spatialBlend = 0;
+        }
+
+        public PoolableAudioSettings(float volume, float pitch, float spatialBlend)
+        {
+            this.volume = volume;
+            this.pitch = pitch;
+            this.spatialBlend = spatialBlend;
+        }
     }
 }
+

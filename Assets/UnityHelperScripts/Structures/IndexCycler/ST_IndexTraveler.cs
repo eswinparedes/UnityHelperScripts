@@ -1,12 +1,15 @@
 ﻿
-public struct IndexCycle
+namespace SUHScripts
 {
-    readonly public int Index;
-    readonly public int Direction;
-
-    public IndexCycle(int index, int dir)
+    public struct IndexCycle
     {
-        Index = index;
-        Direction = dir;
+        readonly public int Index;
+        readonly public int Direction;
+
+        public IndexCycle(int index, int dir)
+        {
+            Index = index;
+            Direction = dir;
+        }
     }
 }

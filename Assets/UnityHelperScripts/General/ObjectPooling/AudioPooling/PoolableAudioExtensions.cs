@@ -1,26 +1,30 @@
 ﻿using UnityEngine;
 
-public static class PoolableAudioExtensions
+namespace SUHScripts
 {
-    public static PoolableAudioSettings QuickSettings =
-        new PoolableAudioSettings()
+    public static class PoolableAudioExtensions
+    {
+        public static PoolableAudioSettings QuickSettings =
+            new PoolableAudioSettings()
+            {
+                volume = 1,
+                pitch = 1,
+                spatialBlend = 0
+            };
+
+        public static void PlaySoundOneShot(this PoolableAudio @this, AudioClip clip, PoolableAudioSettings settings)
         {
-            volume = 1,
-            pitch = 1,
-            spatialBlend = 0
-        };
-
-    public static void PlaySoundOneShot(this PoolableAudio @this, AudioClip clip, PoolableAudioSettings settings)
-    {
-        @this.Source.volume = settings.volume;
-        @this.Source.pitch = settings.pitch;
-        @this.Source.spatialBlend = settings.spatialBlend;
+            @this.Source.volume = settings.volume;
+            @this.Source.pitch = settings.pitch;
+            @this.Source.spatialBlend = settings.spatialBlend;
        
-        @this.Source.PlayOneShot(clip);
-    }
+            @this.Source.PlayOneShot(clip);
+        }
 
-    public static void PlaySoundOneShot(this PoolableAudio @this, AudioClip clip)
-    {
-        @this.PlaySoundOneShot(clip, QuickSettings);
+        public static void PlaySoundOneShot(this PoolableAudio @this, AudioClip clip)
+        {
+            @this.PlaySoundOneShot(clip, QuickSettings);
+        }
     }
 }
+

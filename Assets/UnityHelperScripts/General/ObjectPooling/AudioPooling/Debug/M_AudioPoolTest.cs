@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class M_AudioPoolTest : MonoBehaviour
+namespace SUHScripts
 {
-    [SerializeField] AudioClip spawnAudio = default;
-
-    private void Update()
+    public class M_AudioPoolTest : MonoBehaviour
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        [SerializeField] AudioClip spawnAudio = default;
+
+        private void Update()
         {
-            AudioPool.PlaySoundOneShot(spawnAudio);
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                AudioPool.PlaySoundOneShot(spawnAudio);
+            }
         }
     }
 }
+

@@ -1,18 +1,22 @@
 ﻿using UnityEngine;
 
-public class M_TransformScaleTransition : A_Component
+namespace SUHScripts
 {
-    [SerializeField] TransitionScale m_transitionScale = default;
-
-    private void Start()
+    public class M_TransformScaleTransition : A_Component
     {
-        m_transitionScale.Start();
-    }
-    public override void Execute()
-    {
-        m_transitionScale.Update(m_componentManager.DeltaTime);
-    }
+        [SerializeField] TransitionScale m_transitionScale = default;
 
-    public void Enter() => m_transitionScale.Enter();
-    public void Exit() => m_transitionScale.Exit();
+        private void Start()
+        {
+            m_transitionScale.Start();
+        }
+        public override void Execute()
+        {
+            m_transitionScale.Update(m_componentManager.DeltaTime);
+        }
+
+        public void Enter() => m_transitionScale.Enter();
+        public void Exit() => m_transitionScale.Exit();
+    }
 }
+

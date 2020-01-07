@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using static SUHScripts.Functional.GenericExtensions;
 
-namespace MathHelpers
+namespace SUHScripts
 {
     public static class Interpolation
     {

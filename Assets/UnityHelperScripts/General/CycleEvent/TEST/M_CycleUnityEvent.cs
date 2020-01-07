@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 
-public class M_CycleUnityEvent : MonoBehaviour
+namespace SUHScripts.Tests
 {
-    [SerializeField] EventCycler m_eventCycles = default;
-
-    private void Start()
+    public class M_CycleUnityEvent : MonoBehaviour
     {
-        m_eventCycles.Start();
-    }
+        [SerializeField] EventCycler m_eventCycles = default;
 
-    public void CycleNext() => m_eventCycles.CycleNext();
+        private void Start()
+        {
+            m_eventCycles.Start();
+        }
+
+        public void CycleNext() => m_eventCycles.CycleNext();
+    }
 }

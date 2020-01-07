@@ -1,110 +1,115 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using static MathHelpers.MathHelper;
 
-public class M_WorldPointCustomInputModuleData : A_Component
+namespace SUHScripts
 {
-    [SerializeField] Camera WorldCamera = default;
-    [SerializeField] Transform m_worldPoint = default;
-    [SerializeField] SO_CustomInputModuleData m_data = default;
-    [SerializeField] UnityEvent_Float m_pressAlphaUpdate = default;
+    using static MathHelper;
 
-    [Header("Other Inputs")]
-    [SerializeField] SO_A_Bool m_submitCondition = default;
-    [SerializeField] SO_A_Bool m_cancelCondition = default;
-    [Header("Input Axes")]
-    [SerializeField] SO_A_Float m_horizontalAxis = default;
-    [SerializeField] SO_A_Float m_verticalAxis = default;
-    [SerializeField] SO_A_Bool m_horizontalAxisThisFrame = default;
-    [SerializeField] SO_A_Bool m_verticalAxisThisFrame = default;
-    [Header("Other")]
-    [SerializeField] float m_pressThreshold = default;
-    [SerializeField] float m_hoverThreshold = default;
+    public class M_WorldPointCustomInputModuleData : A_Component
+    {
+        [SerializeField] Camera WorldCamera = default;
+        [SerializeField] Transform m_worldPoint = default;
+        [SerializeField] SO_CustomInputModuleData m_data = default;
+        [SerializeField] UnityEvent_Float m_pressAlphaUpdate = default;
 
-    GameObject m_lastGameObject;
-    BoolTrifecta m_lastState = default;
+        [Header("Other Inputs")]
+        [SerializeField] SO_A_Bool m_submitCondition = default;
+        [SerializeField] SO_A_Bool m_cancelCondition = default;
+        [Header("Input Axes")]
+        [SerializeField] SO_A_Float m_horizontalAxis = default;
+        [SerializeField] SO_A_Float m_verticalAxis = default;
+        [SerializeField] SO_A_Bool m_horizontalAxisThisFrame = default;
+        [SerializeField] SO_A_Bool m_verticalAxisThisFrame = default;
+        [Header("Other")]
+        [SerializeField] float m_pressThreshold = default;
+        [SerializeField] float m_hoverThreshold = default;
+
+        GameObject m_lastGameObject;
+        BoolTrifecta m_lastState = default;
     
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        m_data.GetProcessedResult += GetProcessedResult;
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        m_data.GetProcessedResult -= GetProcessedResult;
-    }
-    public Ray RaycastRay
-    {
-        get
+        protected override void OnEnable()
         {
-            Vector3 transformOnScreenPosition = WorldCamera.WorldToScreenPoint(m_worldPoint.position);
-            Vector3 screenPositionOnWorld = WorldCamera.ScreenToWorldPoint(transformOnScreenPosition);
-
-            Vector3 dir = (m_worldPoint.position - screenPositionOnWorld).normalized;
-
-            Ray ray = WorldCamera.ScreenPointToRay(transformOnScreenPosition);
-            ray = new Ray(m_worldPoint.position, ray.direction);
-            Debug.DrawRay(ray.origin, ray.direction, Color.red);
-
-            return ray;
+            base.OnEnable();
+            m_data.GetProcessedResult += GetProcessedResult;
         }
-    }
 
-    public override void Execute()
-    {
-        m_data.InputRay = RaycastRay;
-    }
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            m_data.GetProcessedResult -= GetProcessedResult;
+        }
+        public Ray RaycastRay
+        {
+            get
+            {
+                Vector3 transformOnScreenPosition = WorldCamera.WorldToScreenPoint(m_worldPoint.position);
+                Vector3 screenPositionOnWorld = WorldCamera.ScreenToWorldPoint(transformOnScreenPosition);
 
-    public RaycastResult GetProcessedResult(RaycastResult result)
-    {
-        bool resultIsValid = result.isValid;
+                Vector3 dir = (m_worldPoint.position - screenPositionOnWorld).normalized;
 
-        float distance = Vector3.Distance(result.worldPosition, m_data.InputRay.origin);
-        bool resultIsInPressRange = IsGameObjectInRange(result, distance, m_pressThreshold);
-        bool resultIsInHoverRange = IsGameObjectInRange(result, distance, m_hoverThreshold);
-        bool allowResult = resultIsValid && (resultIsInPressRange || resultIsInHoverRange);
+                Ray ray = WorldCamera.ScreenPointToRay(transformOnScreenPosition);
+                ray = new Ray(m_worldPoint.position, ray.direction);
+                Debug.DrawRay(ray.origin, ray.direction, Color.red);
 
-        GameObject resultObject = allowResult ? result.gameObject : null;
+                return ray;
+            }
+        }
 
-        bool resultIsSameObjectAsLast = result.gameObject == m_lastGameObject;
-        bool input = resultIsValid && resultIsInPressRange && resultIsSameObjectAsLast;
+        public override void Execute()
+        {
+            m_data.InputRay = RaycastRay;
+        }
 
-        EventSystem.current.SetSelectedGameObject(resultIsInPressRange ? resultObject : null);
-        result.gameObject = resultObject;
-        m_lastGameObject = resultObject;
-        Cursor.lockState = CursorLockMode.None;
+        public RaycastResult GetProcessedResult(RaycastResult result)
+        {
+            bool resultIsValid = result.isValid;
 
-        m_lastState = m_lastState.GetUpdateFromInput(input);
+            float distance = Vector3.Distance(result.worldPosition, m_data.InputRay.origin);
+            bool resultIsInPressRange = IsGameObjectInRange(result, distance, m_pressThreshold);
+            bool resultIsInHoverRange = IsGameObjectInRange(result, distance, m_hoverThreshold);
+            bool allowResult = resultIsValid && (resultIsInPressRange || resultIsInHoverRange);
 
-        (_, m_data.PressedCondition, _, m_data.ReleasedCondition) = m_lastState.Deconstruct();
+            GameObject resultObject = allowResult ? result.gameObject : null;
 
-        float remap = Remap(distance, new Vector2(m_pressThreshold * 3, m_pressThreshold), Range01);
+            bool resultIsSameObjectAsLast = result.gameObject == m_lastGameObject;
+            bool input = resultIsValid && resultIsInPressRange && resultIsSameObjectAsLast;
 
-        return result;
-    }
+            EventSystem.current.SetSelectedGameObject(resultIsInPressRange ? resultObject : null);
+            result.gameObject = resultObject;
+            m_lastGameObject = resultObject;
+            Cursor.lockState = CursorLockMode.None;
+
+            m_lastState = m_lastState.GetUpdateFromInput(input);
+
+            (_, m_data.PressedCondition, _, m_data.ReleasedCondition) = m_lastState.Deconstruct();
+
+            float remap = Remap(distance, new Vector2(m_pressThreshold * 3, m_pressThreshold), Range01);
+
+            return result;
+        }
 
 
 
-    public bool IsGameObjectInRange(RaycastResult result, float distance, float range) =>
-        result.isValid ?
-        distance <= range :
-        false;
+        public bool IsGameObjectInRange(RaycastResult result, float distance, float range) =>
+            result.isValid ?
+            distance <= range :
+            false;
 
    
-    public void GetRidOfShittyWarnings()
-    {
-        var a = m_horizontalAxis;
-        var b = m_verticalAxis;
-        var c = m_horizontalAxisThisFrame;
-        var d = m_verticalAxisThisFrame;
-        var e = m_cancelCondition;
-        var f = m_pressAlphaUpdate;
-        var g = m_submitCondition;
+        public void GetRidOfShittyWarnings()
+        {
+            var a = m_horizontalAxis;
+            var b = m_verticalAxis;
+            var c = m_horizontalAxisThisFrame;
+            var d = m_verticalAxisThisFrame;
+            var e = m_cancelCondition;
+            var f = m_pressAlphaUpdate;
+            var g = m_submitCondition;
 
+        }
     }
 }
+
 
 /*
 public class SO_WorldPointInputModuleData : A_CustomInputModuleSettings

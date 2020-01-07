@@ -1,7 +1,11 @@
-﻿public enum KeyPressState
+﻿
+namespace SUHScripts
 {
-    pressedThisFrame,
-    releasedThisFrame,
-    heldThisFrame,
-    None
+    public enum KeyPressState
+    {
+        pressedThisFrame,
+        releasedThisFrame,
+        heldThisFrame,
+        None
+    }
 }

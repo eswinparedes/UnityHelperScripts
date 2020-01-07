@@ -1,8 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public abstract class SO_A_NoiseData : ScriptableObject
+namespace SUHScripts
 {
-    public abstract INoiseGenerator Generator { get; }
+    public abstract class SO_A_NoiseData : ScriptableObject
+    {
+        public abstract INoiseGenerator Generator { get; }
+    }
 }
+

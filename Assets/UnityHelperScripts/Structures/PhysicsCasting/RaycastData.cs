@@ -1,14 +1,17 @@
-﻿using SUHScripts.Functional;
-using UnityEngine;
+﻿using UnityEngine;
 
-public struct RaycastData
+namespace SUHScripts
 {
-    public readonly Ray SourceRay;
-    public readonly Option<RaycastHit> RaycastHitOption;
-
-    public RaycastData(Ray sourceRay, Option<RaycastHit> raycastHitOption)
+    using Functional;
+    public struct RaycastData
     {
-        this.SourceRay = sourceRay;
-        this.RaycastHitOption = raycastHitOption;
+        public readonly Ray SourceRay;
+        public readonly Option<RaycastHit> RaycastHitOption;
+
+        public RaycastData(Ray sourceRay, Option<RaycastHit> raycastHitOption)
+        {
+            this.SourceRay = sourceRay;
+            this.RaycastHitOption = raycastHitOption;
+        }
     }
 }

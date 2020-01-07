@@ -2,29 +2,33 @@
 using System;
 using UniRx;
 
-public delegate IDisposable SubscriptionProvider();
-public class SubscribableEffect : IDisposable
+namespace SUHScripts
 {
-    public SubscribableEffect(SubscriptionProvider subscription)
+    public delegate IDisposable SubscriptionProvider();
+    public class SubscribableEffect : IDisposable
     {
-        this.m_subscriptionFunction = subscription;
+        public SubscribableEffect(SubscriptionProvider subscription)
+        {
+            this.m_subscriptionFunction = subscription;
+        }
+
+        IDisposable m_disposal;
+        SubscriptionProvider m_subscriptionFunction;
+
+        //SUHS TODO: Make subscription explicit?  EG Have erroor log if subscribe called twice without disposing
+        public IDisposable Subscribe()
+        {
+            Dispose();
+            m_disposal = m_subscriptionFunction();
+            return m_disposal;
+        }
+
+        public void Dispose() =>
+            m_disposal?.Dispose();
+
+        public IDisposable SubscribeAndAddTo(Component attachTo) =>
+            Subscribe().AddTo(attachTo);
+
     }
-
-    IDisposable m_disposal;
-    SubscriptionProvider m_subscriptionFunction;
-
-    //SUHS TODO: Make subscription explicit?  EG Have erroor log if subscribe called twice without disposing
-    public IDisposable Subscribe()
-    {
-        Dispose();
-        m_disposal = m_subscriptionFunction();
-        return m_disposal;
-    }
-
-    public void Dispose() =>
-        m_disposal?.Dispose();
-
-    public IDisposable SubscribeAndAddTo(Component attachTo) =>
-        Subscribe().AddTo(attachTo);
-
 }
+

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using SUHScripts;
 
 public class RaycastOutcome
 {

@@ -1,59 +1,63 @@
 ﻿using UnityEngine;
 
-public class M_TransformPositionTransition : A_Component
+namespace SUHScripts
 {
-    [Header("Transition Settings")]
-    [SerializeField] Transform m_transitionTransform = default;
-    [SerializeField] Transform m_enterPosition = default;
-    [SerializeField] Transform m_exitPosition = default;
-    [SerializeField] AnimationCurve m_movementCurve = default;
-    [SerializeField] float m_transitionTime = .2f;
-
-    Vector3 m_lerpPosA;
-    Vector3 m_lerpPosB;
-    Vector3 m_enterPos;
-    Vector3 m_exitPos;
-    C_Timer m_timer;
-
-    private void Awake()
+    public class M_TransformPositionTransition : A_Component
     {
-        m_enterPos = m_enterPosition.localPosition;
-        m_exitPos = m_exitPosition.localPosition;
+        [Header("Transition Settings")]
+        [SerializeField] Transform m_transitionTransform = default;
+        [SerializeField] Transform m_enterPosition = default;
+        [SerializeField] Transform m_exitPosition = default;
+        [SerializeField] AnimationCurve m_movementCurve = default;
+        [SerializeField] float m_transitionTime = .2f;
 
-        m_lerpPosA = m_transitionTransform.localPosition;
-        m_lerpPosB = m_transitionTransform.localPosition;
+        Vector3 m_lerpPosA;
+        Vector3 m_lerpPosB;
+        Vector3 m_enterPos;
+        Vector3 m_exitPos;
+        C_Timer m_timer;
 
-        m_timer = new C_Timer();
-        m_timer.SetTimerLength(m_transitionTime);
-        m_timer.OnTimerComplete = OnTransitionEnd;
-    }
+        private void Awake()
+        {
+            m_enterPos = m_enterPosition.localPosition;
+            m_exitPos = m_exitPosition.localPosition;
 
-    public override void Execute()
-    {
-        m_timer.UpdateTimer(m_componentManager.DeltaTime);
-        m_transitionTransform.localPosition = Vector3.Lerp(m_lerpPosA, m_lerpPosB, m_movementCurve.Evaluate(m_timer.Alpha)); 
-    }
+            m_lerpPosA = m_transitionTransform.localPosition;
+            m_lerpPosB = m_transitionTransform.localPosition;
 
-    public void Enter()
-    {
-        m_componentManager.AddComponent(this);
-        m_lerpPosA = m_exitPos;
-        m_lerpPosB = m_enterPos;
-        m_transitionTransform.localPosition = m_lerpPosA;
-        m_timer.Restart();
-    }
+            m_timer = new C_Timer();
+            m_timer.SetTimerLength(m_transitionTime);
+            m_timer.OnTimerComplete = OnTransitionEnd;
+        }
 
-    public void Exit()
-    {
-        m_componentManager.AddComponent(this);
-        m_lerpPosA = m_enterPos;
-        m_lerpPosB = m_exitPos; 
-        m_transitionTransform.localPosition = m_lerpPosA;
-        m_timer.Restart();
-    }
+        public override void Execute()
+        {
+            m_timer.UpdateTimer(m_componentManager.DeltaTime);
+            m_transitionTransform.localPosition = Vector3.Lerp(m_lerpPosA, m_lerpPosB, m_movementCurve.Evaluate(m_timer.Alpha)); 
+        }
 
-    public void OnTransitionEnd()
-    {
-        m_componentManager.RemoveComponent(this);
+        public void Enter()
+        {
+            m_componentManager.AddComponent(this);
+            m_lerpPosA = m_exitPos;
+            m_lerpPosB = m_enterPos;
+            m_transitionTransform.localPosition = m_lerpPosA;
+            m_timer.Restart();
+        }
+
+        public void Exit()
+        {
+            m_componentManager.AddComponent(this);
+            m_lerpPosA = m_enterPos;
+            m_lerpPosB = m_exitPos; 
+            m_transitionTransform.localPosition = m_lerpPosA;
+            m_timer.Restart();
+        }
+
+        public void OnTransitionEnd()
+        {
+            m_componentManager.RemoveComponent(this);
+        }
     }
 }
+

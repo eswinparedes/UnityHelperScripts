@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
 
-public interface IPoolableComponent
+namespace SUHScripts
 {
-    void Spawned();
-    void Despawned();
+    public interface IPoolableComponent
+    {
+        void Spawned();
+        void Despawned();
+    }
+
+    public struct PoolablePrefabData
+    {
+        public GameObject go;
+        public IPoolableComponent[] poolableComponents;
+    }
 }
 
-public struct PoolablePrefabData
-{
-    public GameObject go;
-    public IPoolableComponent[] poolableComponents;
-}

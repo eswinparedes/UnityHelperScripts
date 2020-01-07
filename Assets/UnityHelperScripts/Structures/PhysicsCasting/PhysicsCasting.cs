@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using static SUHScripts.Functional.Functional;
 
-namespace SUHScripts.Functional
+namespace SUHScripts
 {
+    using Functional;
     public static class PhysicsCasting
     {
         //SUHS todo: Create overloads that just get an Option<RaycastHit> for lightweight version
@@ -41,11 +42,11 @@ namespace SUHScripts.Functional
         #endregion
 
         #region SphereCasting
-        public static SphereCastData SphereCast(Vector3 origin, float radius, Vector3 direction, 
+        public static SphereCastData SphereCast(Vector3 origin, float radius, Vector3 direction,
             float maxdistance, int layerMask = ~0, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.Ignore)
         {
             RaycastHit hit;
-            bool didHit = 
+            bool didHit =
                 Physics.SphereCast(origin, radius, direction, out hit, maxdistance, layerMask, queryTriggerInteraction);
 
             var hitOption = didHit ? hit.AsOption() : NONE;
@@ -54,5 +55,5 @@ namespace SUHScripts.Functional
         }
         #endregion
     }
-
 }
+

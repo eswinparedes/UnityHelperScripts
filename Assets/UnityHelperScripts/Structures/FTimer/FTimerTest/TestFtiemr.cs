@@ -1,51 +1,55 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class TestFtiemr : MonoBehaviour
+namespace SUHScripts.Tests
 {
-    [SerializeField] Transform m_mover = default;
-    [SerializeField] float m_timerLength = 1;
-    [SerializeField] Vector3 moveVector3 = Vector3.one;
-    [SerializeField] bool loop = false;
-    [SerializeField] bool pingPong = false;
-    [SerializeField] bool canUpdate = false;
-
-    [SerializeField] UnityEvent onTimerCmoplete = new UnityEvent();
-    [SerializeField] [Range(0, 1)] float alpha = 0;
-
-    public FTimer Timer { get; private set; }
-    Vector3 a;
-
-    void Start()
+    public class TestFtiemr : MonoBehaviour
     {
-        Timer = new FTimer(m_timerLength, 0);
-        a = m_mover.position;
-    }
+        [SerializeField] Transform m_mover = default;
+        [SerializeField] float m_timerLength = 1;
+        [SerializeField] Vector3 moveVector3 = Vector3.one;
+        [SerializeField] bool loop = false;
+        [SerializeField] bool pingPong = false;
+        [SerializeField] bool canUpdate = false;
 
-    public void Bounce()
-    {
-        Timer = Timer.Restarted(pingPong, true);
-    }
+        [SerializeField] UnityEvent onTimerCmoplete = new UnityEvent();
+        [SerializeField] [Range(0, 1)] float alpha = 0;
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
+        public FTimer Timer { get; private set; }
+        Vector3 a;
+
+        void Start()
         {
-            Bounce();
+            Timer = new FTimer(m_timerLength, 0);
+            a = m_mover.position;
         }
 
-        if (canUpdate)
+        public void Bounce()
         {
-            Timer =
-            Timer.Tick(Time.deltaTime, loop: loop, pingPong: pingPong, onComplete: onTimerCmoplete.Invoke);
+            Timer = Timer.Restarted(pingPong, true);
         }
 
-        if (Input.GetKeyDown(KeyCode.C))
+        void Update()
         {
-            Timer = Timer.AtAlpha(alpha);
-        }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Bounce();
+            }
 
-        m_mover.position =
-            Vector3.Lerp(a, a + moveVector3, Timer.TimeAlpha());
+            if (canUpdate)
+            {
+                Timer =
+                Timer.Tick(Time.deltaTime, loop: loop, pingPong: pingPong, onComplete: onTimerCmoplete.Invoke);
+            }
+
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                Timer = Timer.AtAlpha(alpha);
+            }
+
+            m_mover.position =
+                Vector3.Lerp(a, a + moveVector3, Timer.TimeAlpha());
+        }
     }
 }
+

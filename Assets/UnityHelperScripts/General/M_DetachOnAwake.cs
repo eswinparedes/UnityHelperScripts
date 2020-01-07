@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class M_DetachOnAwake : MonoBehaviour
+namespace SUHScripts
 {
-    private void Awake()
+    public class M_DetachOnAwake : MonoBehaviour
     {
-        this.transform.parent = null;
+        private void Awake()
+        {
+            this.transform.parent = null;
+        }
     }
 }
+

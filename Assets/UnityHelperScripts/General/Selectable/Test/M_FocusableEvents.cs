@@ -1,22 +1,26 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class M_FocusableEvents : MonoBehaviour, I_Focusable
+namespace SUHScripts.Tests
 {
-    [SerializeField] UnityEvent m_onFocusStartEvent = new UnityEvent();
-    [SerializeField] UnityEvent m_onFocusEndEvent = new UnityEvent();
-
-    public void OnFocusStart()
+    public class M_FocusableEvents : MonoBehaviour, I_Focusable
     {
-        Debug.Log("Focus start");
-        m_onFocusStartEvent.Invoke();
-    }
+        [SerializeField] UnityEvent m_onFocusStartEvent = new UnityEvent();
+        [SerializeField] UnityEvent m_onFocusEndEvent = new UnityEvent();
 
-    public void OnFocusEnd()
-    {
-        Debug.Log("Focus end");
-        m_onFocusEndEvent.Invoke();
-    }
+        public void OnFocusStart()
+        {
+            Debug.Log("Focus start");
+            m_onFocusStartEvent.Invoke();
+        }
+
+        public void OnFocusEnd()
+        {
+            Debug.Log("Focus end");
+            m_onFocusEndEvent.Invoke();
+        }
 
     
+    }
 }
+

@@ -1,25 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class zzTransformOrientation_TEST : MonoBehaviour
+namespace SUHScripts.Tests
 {
-    [SerializeField] KeyCode applyOrientationKey = default;
-    [SerializeField] Transform m_sourceOrientation = default;
-    [SerializeField] Transform m_targetTransform = default;
-    [SerializeField] Vector3 m_rotationOffset = default;
-    [SerializeField] Vector3 m_positionOffset = default;
-    [SerializeField] bool m_perUpdate = false;
-
-    private void Update()
+    public class zzTransformOrientation_TEST : MonoBehaviour
     {
-        if (Input.GetKeyDown(applyOrientationKey) || m_perUpdate)
+        [SerializeField] KeyCode applyOrientationKey = default;
+        [SerializeField] Transform m_sourceOrientation = default;
+        [SerializeField] Transform m_targetTransform = default;
+        [SerializeField] Vector3 m_rotationOffset = default;
+        [SerializeField] Vector3 m_positionOffset = default;
+        [SerializeField] bool m_perUpdate = false;
+
+        private void Update()
         {
-            var orientation =
-                m_sourceOrientation
-                .ExtractOrientationOffset(m_positionOffset, Quaternion.Euler(m_rotationOffset))
-                .ApplyToTransform(m_targetTransform);
+            if (Input.GetKeyDown(applyOrientationKey) || m_perUpdate)
+            {
+                    m_sourceOrientation
+                    .ExtractOrientationOffset(m_positionOffset, Quaternion.Euler(m_rotationOffset))
+                    .ApplyToTransform(m_targetTransform);
+            }
         }
     }
-
 }

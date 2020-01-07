@@ -2,26 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class TransformOrientationBehaviours 
+
+namespace SUHScripts
 {
-    public static Transform ApplyTransformOrientation(Transform target, TransformOrientation data)
+    public static class TransformOrientationBehaviours 
     {
-        target.position = data.Position;
-        target.rotation = data.Rotation;
-        return target;
+        public static void ApplyTransformOrientation(Transform target, TransformOrientation data)
+        {
+            target.position = data.Position;
+            target.rotation = data.Rotation;
+        }
+
+        public static void ApplyOrientation(this Transform @this, TransformOrientation data) =>
+            ApplyTransformOrientation(@this, data);
+
+        public static void ApplyToTransform(this TransformOrientation @this, Transform target) =>
+            ApplyTransformOrientation(target, @this);
+
+        public static void ApplyOrientation(this Transform @this, Transform other) =>
+            other.ExtractOrientation()
+            .ApplyToTransform(other);
+
+        //SUHS TODO: Apply Orientation with offset for rotation and position
+
+        //SUHS TODO: Simulate parent / childe
     }
-
-    public static Transform ApplyOrientation(this Transform @this, TransformOrientation data) =>
-        ApplyTransformOrientation(@this, data);
-
-    public static Transform ApplyToTransform(this TransformOrientation @this, Transform target) =>
-        ApplyTransformOrientation(target, @this);
-
-    public static void ApplyOrientation(this Transform @this, Transform other) =>
-        other.ExtractOrientation()
-        .ApplyToTransform(other);
-
-    //SUHS TODO: Apply Orientation with offset for rotation and position
-
-    //SUHS TODO: Simulate parent / childe
 }
+

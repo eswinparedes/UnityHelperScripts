@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 
-public struct ArcCalcSet
+namespace SUHScripts
 {
-    public Vector3 position;
-    public Vector3 velocity;
-
-    public ArcCalcSet(Vector3 position, Vector3 velocity)
+    public struct ArcCalcSet
     {
-        this.position = position;
-        this.velocity = velocity;
+        public Vector3 position;
+        public Vector3 velocity;
+
+        public ArcCalcSet(Vector3 position, Vector3 velocity)
+        {
+            this.position = position;
+            this.velocity = velocity;
+        }
     }
 }

@@ -1,17 +1,21 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// Represents world space orientation of a transform
-/// </summary>
-[System.Serializable]
-public struct TransformOrientation
+namespace SUHScripts
 {
-    public Vector3 Position { get; private set; }
-    public Quaternion Rotation { get; private set; }
-
-    public TransformOrientation(Vector3 position, Quaternion rotation)
+    /// <summary>
+    /// Represents world space orientation of a transform
+    /// </summary>
+    [System.Serializable]
+    public struct TransformOrientation
     {
-        this.Position = position;
-        this.Rotation = rotation;
+        public Vector3 Position { get; private set; }
+        public Quaternion Rotation { get; private set; }
+
+        public TransformOrientation(Vector3 position, Quaternion rotation)
+        {
+            this.Position = position;
+            this.Rotation = rotation;
+        }
     }
 }
+
