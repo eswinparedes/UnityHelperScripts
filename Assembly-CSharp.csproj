@@ -73,6 +73,7 @@
     <Compile Include="Assets\UnityHelperScripts\Extensions\Components\UnityExt.cs" />
     <Compile Include="Assets\UnityHelperScripts\Extensions\RenderExt.cs" />
     <Compile Include="Assets\UnityHelperScripts\Extensions\Structure\QuaternionExt.cs" />
+    <Compile Include="Assets\UnityHelperScripts\Extensions\Structure\Test\QuaternionExtensionsTest.cs" />
     <Compile Include="Assets\UnityHelperScripts\Extensions\Structure\Vector2Extensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\Extensions\Structure\Vector3Extensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\Functional\Extensions\DelegateExtensions.cs" />
@@ -101,9 +102,6 @@
     <Compile Include="Assets\UnityHelperScripts\General\BasicVRHands\HandPoseId.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\BasicVRHands\M_BasicVRHand.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\BasicVRHands\SO_BasicVRHandState.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\CycleEvent\EventCycler.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\CycleEvent\M_TimedUnityEvent.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\CycleEvent\TEST\M_CycleUnityEvent.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\Debugging\CustomDebug.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\Debugging\DrawBoxByScale.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\Debugging\KeyCodeEvent.cs" />
@@ -118,21 +116,6 @@
     <Compile Include="Assets\UnityHelperScripts\General\Input\TouchInputNew\MouseInput.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\Input\TouchInputNew\TouchInput.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\Input\TouchInputNew\TouchInterfaceData.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\WorldSpaceInput\CustomInputScripts\A_CustomInputModuleSettings.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\WorldSpaceInput\CustomInputScripts\CustomGraphicRaycaster.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\WorldSpaceInput\CustomInputScripts\CustomInputHelpers.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\WorldSpaceInput\CustomInputScripts\CustomRayPointerEventData.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\WorldSpaceInput\CustomInputScripts\M_EventSystemPointerReceiver.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\WorldSpaceInput\CustomInputScripts\SO_CustomInputModuleData.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\WorldSpaceInput\M_CustomInputModule.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\WorldSpaceInput\M_TransformIdentityCustomInputModuleData.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\WorldSpaceInput\M_WorldPointCustomInputModuleData.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\zzTouchInputOld\InputMethods\C_MouseInput.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\zzTouchInputOld\InputMethods\C_TouchInput.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\zzTouchInputOld\InputMethods\C_TouchInterfaceInput.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\zzTouchInputOld\InputMethods\M_SetCameraScreenCastRay.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\zzTouchInputOld\InputMethods\M_TouchInterfaceManager.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Input\zzTouchInputOld\InputMethods\SO_TouchInterfaceData.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\M_DetachOnAwake.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\Algorithm\IPoolableComponent.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\Algorithm\PrefabPool.cs" />
@@ -167,12 +150,6 @@
     <Compile Include="Assets\UnityHelperScripts\General\TransformShake\Models\SO_PerlinNoiseData_Pulse.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\TransformShake\Models\SO_TransfromShakeData.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\TransformShake\zzTest\zzTRANSFORM_SHAKE_TEST.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Transition\M_TransformPositionTransition.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Transition\M_TransformScaleTransition.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Transition\SO_TransitionScaleSettings.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\Transition\TransitionScale.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\TriggerPull\M_TriggerPull.cs" />
-    <Compile Include="Assets\UnityHelperScripts\General\TriggerPull\TriggerPull.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\UnityEventExtensions\Colliders\UnityEvent_Collider.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\UnityEventExtensions\Colliders\UnityEvent_Collider2D.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\UnityEventExtensions\Colliders\UnityEvent_Collision.cs" />
@@ -252,6 +229,9 @@
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\ComponentManager\Base\I_QuickComponent.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\ComponentManager\Base\M_ComponentManager.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\ComponentManager\Base\SO_ComponentManager.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\CycleEvent\EventCycler.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\CycleEvent\M_TimedUnityEvent.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\CycleEvent\TEST\M_CycleUnityEvent.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\EventSysemsAndSubscribers\SE Basic\M_ScriptableEventListener.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\EventSysemsAndSubscribers\SE Basic\ScriptableEventGroup.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\EventSysemsAndSubscribers\SE Basic\SO_A_ScriptableEventBasic.cs" />
@@ -274,6 +254,12 @@
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\States\StateListener.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\TransformIdentity.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\TransformIdentityExtensions.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\Transition\M_TransformPositionTransition.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\Transition\M_TransformScaleTransition.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\Transition\SO_TransitionScaleSettings.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\Transition\TransitionScale.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\TriggerPull\M_TriggerPull.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\TriggerPull\TriggerPull.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\UnityEvent_SO_RaycastOutcome.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\Utility\C_CustomInterpolation.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\Utility\C_MoveTowards.cs" />
@@ -350,26 +336,41 @@
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\VariableObject\Unity Values\Transform\Base\SO_A_TransformReadWrite.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\VariableObject\Unity Values\Transform\SO_Transform.cs" />
     <Compile Include="Assets\UnityHelperScripts\zzOldStuff\VariableObject\Unity Values\Transform\SO_TransformWrapper.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\WorldSpaceInput\CustomInputScripts\A_CustomInputModuleSettings.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\WorldSpaceInput\CustomInputScripts\CustomGraphicRaycaster.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\WorldSpaceInput\CustomInputScripts\CustomInputHelpers.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\WorldSpaceInput\CustomInputScripts\CustomRayPointerEventData.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\WorldSpaceInput\CustomInputScripts\M_EventSystemPointerReceiver.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\WorldSpaceInput\CustomInputScripts\SO_CustomInputModuleData.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\WorldSpaceInput\M_CustomInputModule.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\WorldSpaceInput\M_TransformIdentityCustomInputModuleData.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\WorldSpaceInput\M_WorldPointCustomInputModuleData.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\zzTouchInputOld\InputMethods\C_MouseInput.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\zzTouchInputOld\InputMethods\C_TouchInput.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\zzTouchInputOld\InputMethods\C_TouchInterfaceInput.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\zzTouchInputOld\InputMethods\M_SetCameraScreenCastRay.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\zzTouchInputOld\InputMethods\M_TouchInterfaceManager.cs" />
+    <Compile Include="Assets\UnityHelperScripts\zzOldStuff\zzTouchInputOld\InputMethods\SO_TouchInterfaceData.cs" />
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>D:/projects/UnityHelperScripts/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>D:/projects/unity/UnityHelperScripts/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>D:/projects/UnityHelperScripts/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>D:/projects/unity/UnityHelperScripts/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>D:/projects/UnityHelperScripts/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>D:/projects/unity/UnityHelperScripts/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>D:/projects/UnityHelperScripts/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>D:/projects/unity/UnityHelperScripts/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>D:/projects/UnityHelperScripts/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>D:/projects/unity/UnityHelperScripts/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>D:/projects/UnityHelperScripts/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>D:/projects/unity/UnityHelperScripts/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
-      <HintPath>D:/projects/UnityHelperScripts/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+      <HintPath>D:/projects/unity/UnityHelperScripts/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/programs/UNITY_EDITORS/2019.1.6f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -558,13 +559,13 @@
       <HintPath>D:/programs/UNITY_EDITORS/2019.1.6f1/Editor/Data/PlaybackEngines/VuforiaSupport/Managed/Runtime/Vuforia.UnityExtensions.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
-      <HintPath>D:/projects/UnityHelperScripts/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Editor.dll</HintPath>
+      <HintPath>D:/projects/unity/UnityHelperScripts/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>D:/projects/UnityHelperScripts/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.StandardEvents.dll</HintPath>
+      <HintPath>D:/projects/unity/UnityHelperScripts/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>D:/projects/UnityHelperScripts/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Tracker.dll</HintPath>
+      <HintPath>D:/projects/unity/UnityHelperScripts/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>D:/programs/UNITY_EDITORS/2019.1.6f1/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

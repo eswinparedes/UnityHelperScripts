@@ -8,7 +8,10 @@ namespace SUHScripts.Tests
     {
         [Header("Transition Settings")]
         [SerializeField] Transform m_transitionTransform = default;
-        [SerializeField] SO_TransitionScaleSettings m_settings = default;
+        [SerializeField] Vector3 m_scaleEnter = Vector3.one;
+        [SerializeField] Vector3 m_scaleExit = Vector3.zero;
+        [SerializeField] AnimationCurve m_movementCurve = new AnimationCurve();
+        [SerializeField] float m_transitionTime = 0.2f;
         [SerializeField] bool m_startExited = true;
         [SerializeField] bool m_eventsFireOnFullTransitionOnly = false;
         [Header("Events")]
@@ -32,17 +35,17 @@ namespace SUHScripts.Tests
 
         public void Start()
         {
-            m_lerpEnter = Vector3.Scale(m_transitionTransform.localScale, m_settings.ScaleEnter);
-            m_lerpExit = Vector3.Scale(m_transitionTransform.localScale, m_settings.ScaleExit);
+            m_lerpEnter = Vector3.Scale(m_transitionTransform.localScale, m_scaleEnter);
+            m_lerpExit = Vector3.Scale(m_transitionTransform.localScale, m_scaleExit);
 
-            m_timer = new FTimer(m_settings.TransitionTime, m_settings.TransitionTime, !m_startExited);
+            m_timer = new FTimer(m_transitionTime, m_transitionTime, !m_startExited);
             m_isEntered = !m_startExited;
         }
 
         void Update()
         {
             m_timer = m_timer.Tick(Time.deltaTime, onComplete: OnTimerComplete.Invoke);
-            m_transitionTransform.localScale = Vector3.Lerp(m_lerpExit, m_lerpEnter, m_settings.MovementCurve.Evaluate(m_timer.TimeAlpha()));
+            m_transitionTransform.localScale = Vector3.Lerp(m_lerpExit, m_lerpEnter, m_movementCurve.Evaluate(m_timer.TimeAlpha()));
         }
 
         public void Enter()

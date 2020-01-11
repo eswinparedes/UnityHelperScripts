@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Experimental/BasicVRHandState")]
+[CreateAssetMenu(menuName = "SUHS/Experimental/BasicVRHandState")]
 public class SO_BasicVRHandState : ScriptableObject
 {
     [SerializeField] BasicVRHandState m_state;

@@ -5,7 +5,7 @@ namespace SUHScripts
     public class TEST_RadialMenuBehaviour : MonoBehaviour
     {
         [SerializeField] RadialMenuBehaviour m_radialMenu = default;
-        [SerializeField] SO_A_Bool m_actionBehaviour = default;
+        [SerializeField] KeyCode m_actionBehaviourKey = KeyCode.Space;
 
         Vector2 input => new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
@@ -18,7 +18,7 @@ namespace SUHScripts
         void Update()
         {
             m_radialMenu.Update(new Vector2(input.x, input.y));
-            if (m_actionBehaviour.IsTrue)
+            if (Input.GetKeyDown(m_actionBehaviourKey))
             {
                 m_radialMenu.RequestActionOnSelectedRadialObject();
             }

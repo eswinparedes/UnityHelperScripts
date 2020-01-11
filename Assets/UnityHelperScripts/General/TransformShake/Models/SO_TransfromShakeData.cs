@@ -2,7 +2,7 @@
 
 namespace SUHScripts
 {
-    [CreateAssetMenu(menuName = "Experimental/Transform Shake Data")]
+    [CreateAssetMenu(menuName = "SUHS/Experimental/Transform Shake Data")]
     public class SO_TransfromShakeData : ScriptableObject
     {
         [SerializeField] SO_A_NoiseData m_positionData = default;

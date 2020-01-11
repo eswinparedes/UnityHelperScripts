@@ -2,7 +2,7 @@
 
 namespace SUHScripts
 {
-    [CreateAssetMenu(menuName = "Touch Interface Data")]
+    [CreateAssetMenu(menuName = "SUHS/Touch Interface Data")]
     public class TouchInterfaceData : ScriptableObject
     {
         public bool TapThisFrame;

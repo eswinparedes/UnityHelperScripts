@@ -81,7 +81,7 @@ namespace SUHScripts
 
             m_lastState = m_lastState.GetUpdateFromInput(input);
 
-            (_, m_data.PressedCondition, _, m_data.ReleasedCondition) = m_lastState.Deconstruct();
+            (m_data.PressedCondition, _, m_data.ReleasedCondition) = m_lastState.Deconstruct();
 
             float remap = Remap(distance, new Vector2(m_pressThreshold * 3, m_pressThreshold), Range01);
 

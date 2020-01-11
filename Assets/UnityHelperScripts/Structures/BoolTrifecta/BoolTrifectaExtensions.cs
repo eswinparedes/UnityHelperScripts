@@ -7,17 +7,20 @@
             bool thisFrame = input && !lastState.IsTrueThisFrame && !lastState.IsTrueStay;
             bool stay = input && !thisFrame;
             bool falseThisFrame = !input && !lastState.IsFalseThisFrame && (lastState.IsTrueThisFrame | lastState.IsTrueStay);
-            return new BoolTrifecta(input, thisFrame, stay, falseThisFrame);
+            return new BoolTrifecta(thisFrame, stay, falseThisFrame);
         }
 
+        public static bool IsTrue(this BoolTrifecta @this) =>
+            @this.IsTrueThisFrame || @this.IsTrueStay;
+
         public static BoolTrifecta AsTrueThisFrame(this BoolTrifecta @this) =>
-            new BoolTrifecta(true, true, false, false);
+            new BoolTrifecta(true, false, false);
 
         public static BoolTrifecta AsTrueStay(this BoolTrifecta @this) =>
-            new BoolTrifecta(true, false, true, false);
+            new BoolTrifecta(false, true, false);
 
         public static BoolTrifecta AsFalseThisFrame(this BoolTrifecta @this) =>
-            new BoolTrifecta(false, false, false, true);
+            new BoolTrifecta(false, false, true);
     }
 }
 

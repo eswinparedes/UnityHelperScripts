@@ -2,7 +2,7 @@
 
 namespace SUHScripts
 {
-    [CreateAssetMenu(menuName = "Experimental/Perlin Noise Constant")]
+    [CreateAssetMenu(menuName = "SUHS/Experimental/Perlin Noise Constant")]
     public class SO_PerlinNoiseData_Constant : SO_A_NoiseData
     {
         [SerializeField] PerlinNoiseData_Constant m_noiseData = default;
