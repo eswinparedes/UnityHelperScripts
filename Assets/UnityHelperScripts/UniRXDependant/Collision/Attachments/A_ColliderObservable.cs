@@ -7,7 +7,7 @@ namespace SUHScripts
     using Functional;
     public abstract class A_ColliderObservable : MonoBehaviour
     {
-        public abstract IObservable<(Option<Collision> col, Collider other)> OnEnter { get; }
-        public abstract IObservable<(Option<Collision> col, Collider other)> OnExit { get; }
+        public abstract IObservable<ICollisionObservation> OnEnter { get; }
+        public abstract IObservable<ICollisionObservation> OnExit { get; }
     }
 }

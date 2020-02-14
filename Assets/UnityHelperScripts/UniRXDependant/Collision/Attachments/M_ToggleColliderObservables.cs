@@ -12,11 +12,11 @@ namespace SUHScripts
         [SerializeField] A_ColliderObservable m_onEnterCollider = default;
         [SerializeField] A_ColliderObservable m_onExitCollider = default;
 
-        Subject<(Option<Collision> col, Collider other)> m_onEnter = new Subject<(Option<Collision> col, Collider other)>();
-        Subject<(Option<Collision> col, Collider other)> m_onExit = new Subject<(Option<Collision> col, Collider other)>();
+        Subject<ICollisionObservation> m_onEnter = new Subject<ICollisionObservation>();
+        Subject<ICollisionObservation> m_onExit = new Subject <ICollisionObservation>();
    
-        public override IObservable<(Option<Collision> col, Collider other)> OnEnter => m_onEnter;
-        public override IObservable<(Option<Collision> col, Collider other)> OnExit => m_onExit;
+        public override IObservable<ICollisionObservation> OnEnter => m_onEnter;
+        public override IObservable<ICollisionObservation> OnExit => m_onExit;
 
         private void Awake()
         {
@@ -24,20 +24,20 @@ namespace SUHScripts
 
             m_onEnterCollider
                 .OnEnter
-                .Where(result => !collidersEntered.Contains(result.other))
+                .Where(result => !collidersEntered.Contains(result.CollidingOther))
                 .Subscribe(result =>
                 {
-                    collidersEntered.Add(result.other);
+                    collidersEntered.Add(result.CollidingOther);
                     m_onEnter.OnNext(result);
                 })
                 .AddTo(this);
 
             m_onExitCollider
                 .OnEnter
-                .Where(result => collidersEntered.Contains(result.other))
+                .Where(result => collidersEntered.Contains(result.CollidingOther))
                 .Subscribe(result =>
                 {
-                    collidersEntered.Remove(result.other);
+                    collidersEntered.Remove(result.CollidingOther);
                     m_onExit.OnNext(result);
                 })
                 .AddTo(this);

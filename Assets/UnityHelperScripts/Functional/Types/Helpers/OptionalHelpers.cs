@@ -18,5 +18,7 @@ namespace SUHScripts.Functional
 
         public static Some<T> Some<T>(T value) =>
             new Some<T>(value);
+
+
     }
 }

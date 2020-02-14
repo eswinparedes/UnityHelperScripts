@@ -11,11 +11,11 @@ namespace SUHScripts
     {
         [SerializeField] List<Collider> m_colliderGroup = default;
 
-        Subject<(Option<Collision> col, Collider other)> m_onEnter = new Subject<(Option<Collision> col, Collider other)>();
-        Subject<(Option<Collision> col, Collider other)> m_onExit = new Subject<(Option<Collision> col, Collider other)>();
+        Subject<ICollisionObservation> m_onEnter = new Subject<ICollisionObservation>();
+        Subject<ICollisionObservation> m_onExit = new Subject<ICollisionObservation>();
     
-        public override IObservable<(Option<Collision> col, Collider other)> OnEnter => m_onEnter;
-        public override IObservable<(Option<Collision> col, Collider other)> OnExit => m_onExit;
+        public override IObservable<ICollisionObservation> OnEnter => m_onEnter;
+        public override IObservable<ICollisionObservation> OnExit => m_onExit;
 
         private void Awake()
         {
@@ -40,10 +40,10 @@ namespace SUHScripts
                 .OnEnterAny()
                 .Subscribe(output =>
                 {
-                    if(!collisionsSustained.Any(output.other))
+                    if(!collisionsSustained.Any(output.CollidingOther))
                         m_onEnter.OnNext(output);
         
-                    collisionsSustained.Increment(output.other);
+                    collisionsSustained.Increment(output.CollidingOther);
                 
                 })
                 .AddTo(this);
@@ -53,9 +53,9 @@ namespace SUHScripts
                 .OnExitAny()
                 .Subscribe(output =>
                 {
-                    collisionsSustained.Decrement(output.other);
+                    collisionsSustained.Decrement(output.CollidingOther);
 
-                    if (!collisionsSustained.Any(output.other))
+                    if (!collisionsSustained.Any(output.CollidingOther))
                         m_onExit.OnNext(output);
 
                 })

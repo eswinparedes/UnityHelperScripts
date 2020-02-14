@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using static SUHScripts.Functional.Functional;
 using SUHScripts.Functional.UnitType;
+
+
 namespace SUHScripts.Functional
 {
     public static class OptionExtensions
@@ -10,14 +12,10 @@ namespace SUHScripts.Functional
         //SUHS TODO: Performance updates!!
         #region CORE
         public static Option<R> Map<T, R>(this Option<T> optT, Func<T, R> f) =>
-            optT.Match(
-                () => (Option<R>) NONE,
-                t => Some(f(t)));
+            optT.IsSome ? f(optT.Value).AsOption() : NONE;
 
         public static Option<R> Bind<T, R>(this Option<T> optT, Func<T, Option<R>> f) =>
-            optT.Match(
-                () => NONE,
-                t => f(t));
+            optT.IsSome ? f(optT.Value) : NONE;
 
         public static Option<T> Lookup<K, T>(this IDictionary<K, T> dict, K key)
         {
@@ -38,19 +36,13 @@ namespace SUHScripts.Functional
             @this.WhereLift(pred(@this));
 
         public static Option<T> Where<T>(this Option<T> optT, bool pred) =>
-            optT.Match(
-                () => NONE,
-                t => pred ? (Option<T>) t : NONE);
+            optT.IsSome ? pred ? optT.Value.AsOption() : NONE : NONE;
 
         public static Option<T> Where<T>(this Option<T> optT, Func<T, bool> pred) =>
-            optT.Match(
-                () => NONE,
-                t => pred(t) ? (Option<T>)t : NONE);
+            optT.IsSome ? pred(optT.Value) ? optT.Value.AsOption() : NONE : NONE;
 
         public static T Reduce<T>(this Option<T> optT, Func<T> onNone) =>
-            optT.Match(
-                () => onNone(),
-                t => t);
+            optT.IsSome ? optT.Value : onNone();
 
         public static Option<T> AsOption<T>(this T @this) =>
             @this == null ? (Option<T>) NONE : (Option<T>)@this;
