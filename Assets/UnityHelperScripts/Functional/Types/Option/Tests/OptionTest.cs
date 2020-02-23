@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SUHScripts.Functional;
 using static SUHScripts.Functional.Functional;
-using SUHScripts.Testing;
+using SUHScripts.Tests;
 
 namespace SUHScripts.Functional.Tests
 { 

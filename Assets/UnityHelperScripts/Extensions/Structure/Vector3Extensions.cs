@@ -41,6 +41,9 @@ namespace SUHScripts
         public static Vector3 Average(this IEnumerable<Vector3> @this) =>
             @this.Aggregate((x, y) => x + y) / @this.Count();
 
+        public static Vector3 Sum(this IEnumerable<Vector3> @this) =>
+            @this.Aggregate((x, y) => x + y);
+
         public static Vector3 AccelerateTowardsDesiredVectorClamped(this Vector3 current, Vector3 desired, float acceleration)
         {
             var dir = desired - current;

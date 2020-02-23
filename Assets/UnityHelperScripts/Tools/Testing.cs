@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace SUHScripts.Testing
+namespace SUHScripts.Tests
 {
     public delegate bool TestValidator<T>(T result, T expected);
     public static class Testing

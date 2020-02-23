@@ -10,20 +10,26 @@ namespace SUHScripts
     {
         public delegate NoiseOutput NoiseGenerator(NoiseInput noiseInput);
 
-        public static Vector3 EvaluateAllWithKill(this List<NoiseGenerator> @this, NoiseInput input)
+        public static IEnumerable<Vector3> YieldEvaluationsWithKill(this List<NoiseGenerator> @this, NoiseInput input)
         {
-            Vector3 positionOffset = Vector3.zero;
+            bool hasYielded = false;
 
             for (int i = @this.Count - 1; i >= 0; i--)
             {
                 var se = @this[i](input);
 
                 if (se.Noise.IsSome)
-                    positionOffset += se.Noise.Value;
+                {
+                    yield return se.Noise.Value;
+                    hasYielded = true;
+                }
+
                 else
                     @this.RemoveAt(i);
             }
-            return positionOffset;
+
+            if (!hasYielded)
+                yield return Vector3.zero;
         }
 
         public static NoiseGenerator BuildGenerator(this INoiseGenerator @this)

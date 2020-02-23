@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 922844506654361168}
   - component: {fileID: 922844506654361169}
   m_Layer: 0
-  m_Name: Root
+  m_Name: TransformShakeTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,7 +152,7 @@ MonoBehaviour:
           m_Arguments:
             m_ObjectArgument: {fileID: 11400000, guid: c7e427cf82b07904e8ce10a82c7c3c76,
               type: 2}
-            m_ObjectArgumentAssemblyTypeName: SO_TransfromShakeData, Assembly-CSharp
+            m_ObjectArgumentAssemblyTypeName: SUHScripts.SO_TransfromShakeData, Assembly-CSharp
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -164,7 +164,7 @@ MonoBehaviour:
           m_Arguments:
             m_ObjectArgument: {fileID: 11400000, guid: 4755c645173b1514ab28c4d0aa4e9645,
               type: 2}
-            m_ObjectArgumentAssemblyTypeName: SO_A_NoiseData, Assembly-CSharp
+            m_ObjectArgumentAssemblyTypeName: SUHScripts.SO_A_NoiseData, Assembly-CSharp
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 

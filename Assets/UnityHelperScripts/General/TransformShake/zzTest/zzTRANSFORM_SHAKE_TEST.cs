@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using UniRx.Triggers;
 
 namespace SUHScripts
 {
@@ -22,9 +23,12 @@ namespace SUHScripts
                 .SubscribeTo(m_target0, M_UpdateManager.OnFixedUpdate_0, m_shakes)
                 .AddTo(this);
 
-            var result = ShakeBehaviours.SubscribeTo(M_UpdateManager.OnFixedUpdate_0, m_noises);
-            result.subscription.AddTo(this);
-            result.noiseFunction.Subscribe(noise => m_target1.localPosition = noise).AddTo(this);
+            var result =
+                this.UpdateAsObservable()
+                .Select(_ => Time.deltaTime)
+                .ObserveNoiseGenerators(m_noises, vs => vs.Sum())
+                .Subscribe(v => m_target1.localPosition = v)
+                .AddTo(this);
         }
 
         public void AddNoise(SO_A_NoiseData noise)

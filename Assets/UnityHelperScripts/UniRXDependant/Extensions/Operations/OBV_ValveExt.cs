@@ -1,5 +1,4 @@
-﻿using SUHScripts.Functional;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UniRx;
@@ -7,7 +6,7 @@ using UnityEngine;
 
 namespace SUHScripts
 {
-    public static class Pending
+    public static class OBV_ValveExt     
     {
         public static IObservable<T> Valve<T>(this IObservable<T> @this, IObservable<bool> playSteam, bool startPlaying) =>
         Observable.Create<T>(observer =>
@@ -39,45 +38,35 @@ namespace SUHScripts
                 return SUHScripts.DisposableExtensions.AsDisposable(isPlayingSub, obSub);
             });
 
-        public static void ModifyToRouteComponentQueriesTo(GameObject routTo, params Collider[] colliders)
-        {
-            if (colliders.Length == 0)
+        public static IObservable<bool> ValveFrom<U, V>(IObservable<U> onStream, IObservable<V> offStream, bool startPlaying) =>
+         Observable.Create<bool>(observer =>
+         {
+             var isPlaying = startPlaying;
+
+             var sub =
+             onStream.Select(_ => true)
+             .Merge(offStream.Select(_ => false))
+             .Subscribe(observer.OnNext, observer.OnError, observer.OnCompleted);
+
+             return sub;
+         });
+
+        public static IObservable<T> ValveBy<T, U, V>(this IObservable<T> @this, IObservable<U> onStream, IObservable<V> offStream, bool startPlaying) =>
+            Observable.Create<T>(observer =>
             {
-                Debug.LogError("'colliders' array has no values, was this on purpose?");
-            }
+                var isPlaying = startPlaying;
 
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                var source = colliders[i].gameObject.GetOrAddComponent<PushableQuerySource>();
-                source.PushSource(routTo);
-            }
-        }
+                var valveFromSub =
+                    ValveFrom(onStream, offStream, startPlaying)
+                    .Subscribe(setStartPlaying => isPlaying = setStartPlaying);
 
-        class PushableQuerySource : A_QueryComponentSource
-        {
-            GameObject m_source;
+                var obsSub =
+                    @this.Where(_ => isPlaying)
+                    .Subscribe(observer.OnNext, observer.OnError, observer.OnCompleted);
 
-            public void PushSource(GameObject source)
-            {
-                m_source = source;
-            }
-            public override Option<T> QueryComponentOption<T>() =>
-                m_source.GetComponentOption<T>();
-        }
+                return SUHScripts.DisposableExtensions.AsDisposable(valveFromSub, obsSub);
+            });
 
-        public static void AddedReturn<T>(this Subject<T> subject, Component addTo, T value)
-        {
-            subject.AddTo(addTo);
-            subject.OnNext(value);
-            subject.OnCompleted();
-        }
-
-        public static void AddedReturn<T>(this ReplaySubject<T> subject, Component addTo, T value)
-        {
-            subject.AddTo(addTo);
-            subject.OnNext(value);
-            subject.OnCompleted();
-        }
     }
-}
 
+}

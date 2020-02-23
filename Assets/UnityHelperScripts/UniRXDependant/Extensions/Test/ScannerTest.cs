@@ -22,7 +22,7 @@ namespace SUHScripts.Tests
             var upwardsScan = tick.TimerScan(val => val, () => new FTimer(1, 0));
             var downwardsScan = tick.TimerScan(val => val, () => new FTimer(1, 1, false));
 
-            var indexStream = ObservableExtensions.MergeTriggersIntoIndex(incrementTrigger, decrementTrigger);
+            var indexStream = OBV_Ext.MergeTriggersIntoIndex(incrementTrigger, decrementTrigger);
 
             var scanStream =
                 indexStream
