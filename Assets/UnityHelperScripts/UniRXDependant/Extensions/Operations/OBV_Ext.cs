@@ -129,7 +129,8 @@ namespace SUHScripts
                     valueProvider
                     .Subscribe(
                         onNext: toScan => values[valueProviderClosure] = toScan,
-                        onCompleted: () => values.Remove(valueProviderClosure))
+                        onCompleted: () => values.Remove(valueProviderClosure),
+                        onError: e => values.Remove(valueProviderClosure))
                     .AddTo(subs);
 
                 }).AddTo(subs);
@@ -201,13 +202,6 @@ namespace SUHScripts
 
                return new CompositeDisposable(sub0, sub1);
            });
-
-
-
-
-
-
-
 
 
         /// <summary>

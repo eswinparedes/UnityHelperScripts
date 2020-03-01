@@ -1,21 +1,58 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using UniRx.Triggers;
 
 namespace SUHScripts
 {
     using static PoolableAudioExtensions;
-    public class AudioPool : MonoBehaviour
+    public static class AudioPool 
     {
-        [SerializeField] PoolableAudio prefab = default;
-
         public static HashSet<PoolableAudio> m_spawned = new HashSet<PoolableAudio>();
-        public static AudioPool Instance { get; private set; } = null;
+        public static GameObject Instance { get; private set; } = null;
         public static GameObject Prefab { get; private set; }
 
         //SUHS TODO: Remove need for "Get Component" Possibly by casting ?
         public static void PlaySoundOneShot(AudioClip clip, PoolableAudioSettings settings, Vector3? location = null)
         {
+            if(Instance == null)
+            {
+                Instance = new GameObject();
+                Instance.gameObject.name = "No instance AudioPool found, defaulting to this";
+                Instance
+                    .FixedUpdateAsObservable()
+                    .Subscribe(_ =>
+                    {
+                        m_spawned.RemoveWhere(p =>
+                        {
+                            bool shouldDespawn = !p.Source.isPlaying;
+
+                            if (shouldDespawn)
+                                PrefabPoolingSystem.Despawn(p.gameObject);
+
+                            return shouldDespawn;
+                        });
+                    })
+                    .AddTo(Instance);
+
+                Instance.OnDestroyAsObservable()
+                    .Subscribe(_ =>
+                    {
+                        Instance = null;
+                        
+                        foreach(var a in m_spawned)
+                        {
+                            PrefabPoolingSystem.Despawn(a.gameObject);
+                        }
+
+                        m_spawned.Clear();
+                    }).AddTo(Instance);
+
+                Prefab = (GameObject) Resources.Load
+                    ("SUHScripts/General/ObjectPooling/QuickPoolableAudio Variant");
+                Debug.Log(Prefab.gameObject.name);
+            }
+
             var audioGO = PrefabPoolingSystem.Spawn(Prefab.gameObject);
             var poolableAudio = audioGO.GetComponent<PoolableAudio>();
 
@@ -56,34 +93,6 @@ namespace SUHScripts
             PlaySoundOneShot(data.Clip, data.Settings, location);
         }
 
-        private void Start()
-        {
-            if(Instance != null)
-            {
-                Debug.LogError("AUDIO POOL INSTANCE ALREADY SET");
-            }
-            else
-            {
-                Instance = this;
-                Prefab = prefab.gameObject;
-            }
-
-            M_UpdateManager
-                .OnFixedUpdate_0
-                .Subscribe(_ =>
-                {
-                    m_spawned.RemoveWhere(poolableAudio =>
-                    {
-                        bool shouldDespawn = !poolableAudio.Source.isPlaying;
-
-                        if (shouldDespawn)
-                            PrefabPoolingSystem.Despawn(poolableAudio.gameObject);
-
-                        return shouldDespawn;
-                    });
-                })
-                .AddTo(this);
-        }
     }
 }
 

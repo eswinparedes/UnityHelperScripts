@@ -71,6 +71,7 @@
     <Compile Include="Assets\UnityHelperScripts\Extensions\Components\RigidbodyExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\Extensions\Components\TransformExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\Extensions\Components\UnityExt.cs" />
+    <Compile Include="Assets\UnityHelperScripts\Extensions\PrimitiveExt.cs" />
     <Compile Include="Assets\UnityHelperScripts\Extensions\RenderExt.cs" />
     <Compile Include="Assets\UnityHelperScripts\Extensions\Structure\QuaternionExt.cs" />
     <Compile Include="Assets\UnityHelperScripts\Extensions\Structure\Test\QuaternionExtensionsTest.cs" />
@@ -216,6 +217,7 @@
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Behaviours\SubjectExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Behaviours\SubscribeExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Models\DisposableValue.cs" />
+    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_CommandChain.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_Ext.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_FTimingExt.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_NoiseVec3.cs" />
@@ -223,6 +225,7 @@
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_ValveExt.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\Testing\TEST_FirstCompleted.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\Testing\TEST_ObserveNoiseGenerators.cs" />
+    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\Testing\TEST_OBV_CommandChain.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\Testing\TEST_TestTakeDuring.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Test\ScannerTest.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Test\TEST_SingleSElect.cs" />

@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/UnityHelperScripts/UniRXDependant/Extensions/Operations/Testing/TEST_ObserveNoiseGenerators.unity
+- path: Assets/UnityHelperScripts/UniRXDependant/Extensions/Operations/Testing/TEST_OBV_CommandChain.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

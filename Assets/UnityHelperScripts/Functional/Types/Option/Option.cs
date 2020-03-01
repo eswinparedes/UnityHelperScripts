@@ -11,7 +11,8 @@ namespace SUHScripts.Functional
 
         private Option(T value)
         {
-            this.isSome = true;
+
+            this.isSome = value.NotNull();
             this.value = value;
         }
 
@@ -22,7 +23,7 @@ namespace SUHScripts.Functional
             new Option<T>(some.Value);
 
         public static implicit operator Option<T>(T value) =>
-            value == null ? (Option<T>) NONE : Some(value);
+            value.IsNull() ? (Option<T>) NONE : Some(value);
 
         public R Match<R>(Func<R> onNone, Func<T, R> onSome) =>
             isSome ?  onSome(value) : onNone();

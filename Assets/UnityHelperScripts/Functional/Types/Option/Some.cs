@@ -8,7 +8,7 @@ namespace SUHScripts.Functional
 
         internal Some(T value)
         {
-            if (value == null)
+            if (value.IsNull())
                 throw new ArgumentNullException();
 
             Value = value;

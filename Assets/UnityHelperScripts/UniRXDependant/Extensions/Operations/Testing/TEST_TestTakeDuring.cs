@@ -29,7 +29,6 @@ namespace SUHScripts.Tests
                     onCompleted: () => Debug.Log($"Source Emission For {m_sourceEmissionKey.ToString()} Completed"))
                 .AddTo(this);
         }
-
     }
 
     public static class TEST_TestTakeDuringExt

@@ -44,8 +44,11 @@ namespace SUHScripts.Functional
         public static T Reduce<T>(this Option<T> optT, Func<T> onNone) =>
             optT.IsSome ? optT.Value : onNone();
 
-        public static Option<T> AsOption<T>(this T @this) =>
-            @this == null ? (Option<T>) NONE : (Option<T>)@this;
+        public static Option<T> AsOption<T>(this T @this)
+        {
+            return
+                @this.IsNull() ? None.Default : (Option<T>)new Some<T>(@this);
+        }
         #endregion
 
         #region Action Help

@@ -8,9 +8,15 @@ using static SUHScripts.Functional.Functional;
 
 public static class OBV_SingleSelectExt
 {
-    public static IObservable<ASingleSelect<T>> SingleSelectToggler<T>(this IObservable<T> @this, Func<T, T, bool> equalsComparer) =>
-            @this.Select(t => t.AsOption())
-            .StartWith(NONE)
+    /// <summary>
+    /// Use Observable.Create ???
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="this"></param>
+    /// <param name="equalsComparer"></param>
+    /// <returns></returns>
+    public static IObservable<ASingleSelect<T>> SingleSelectToggler<T>(this IObservable<Option<T>> @this, Func<T, T, bool> equalsComparer) =>
+            @this      
             .Scan(new SingleSelect<T>(), (lastSingleSelect, newIn) =>
             {
                 if (lastSingleSelect.Select.IsSome && newIn.IsSome && equalsComparer(lastSingleSelect.Select.Value, newIn.Value))
@@ -23,14 +29,12 @@ public static class OBV_SingleSelectExt
                 }
             });
 
-    public static IObservable<ASingleSelect<T>> SingleSelectToggler_Published<T>(this IObservable<T> @this, Func<T, T, bool> equalsComparer)
+    public static IObservable<ASingleSelect<T>> SingleSelectToggler_Published<T>(this IObservable<Option<T>> @this, Func<T, T, bool> equalsComparer)
     {
         var singleSelect = new SingleSelect_Mutable<T>();
 
         var obvPublish =
             @this
-            .Select(t => t.AsOption())
-            .StartWith(NONE)
             .Scan(singleSelect, (lastSingleSelect, newIn) =>
             {
                 if (lastSingleSelect.Select.IsSome && newIn.IsSome && equalsComparer(lastSingleSelect.Select.Value, newIn.Value))

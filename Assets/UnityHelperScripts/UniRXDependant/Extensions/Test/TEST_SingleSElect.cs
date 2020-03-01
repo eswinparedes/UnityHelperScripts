@@ -12,15 +12,23 @@ namespace SUHScripts.Tests
 {
     public class TEST_SingleSElect : MonoBehaviour
     {
+        [SerializeField] KeyCode m_resetKey = KeyCode.Space;
+
         private void Awake()
         {
+            var key =
+                this.UpdateAsObservable()
+                .Where(_ => Input.GetKeyDown(m_resetKey))
+                .Select(_ => (Option<Transform>) None.Default);
+
             var singleSelector =
                 this.UpdateAsObservable()
                 .Where(_ => Input.GetMouseButtonDown(0))
                 .Select(_ => Input.mousePosition)
                 .Select(pos => Camera.main.ScreenPointToRay(pos))
                 .Choose(ray => SUHScripts.PhysicsCasting.Raycast(ray).RaycastHitOption)
-                .Select(hit => hit.collider.transform)
+                .Select(hit => hit.collider.transform.AsOption())
+                .Merge(key)
                 .SingleSelectToggler((t0, t1) => t0 == t1);
 
 
