@@ -19,6 +19,7 @@ namespace SUHScripts.Tests
             var obvsGrouped = COps.ObserveCollisionsGrouped(m_groupedCollisionColliders, this);
             var obvsToggled = COps.ObserveCollisionsToggled(obvsSingle.onEnter, obvsGrouped.onEnter, this);
 
+            return;
             obvsSingle
                 .onEnter
                 .Subscribe(_ => Debug.Log("Single Entered"))

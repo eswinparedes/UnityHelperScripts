@@ -12,6 +12,18 @@ namespace SUHScripts
         Collider CollidingOther { get; }
     }
 
+    public class CollisionObserved : ICollisionObservation
+    {
+        public CollisionObserved(Option<Collision> collisionData, Collider collidingOther)
+        {
+            CollisionData = collisionData;
+            CollidingOther = collidingOther;
+        }
+
+        public Option<Collision> CollisionData { get; }
+
+        public Collider CollidingOther { get;}
+    }
     public class CollisionObservation : ICollisionObservation
     {
         public CollisionObservation(Func<Option<Collision>> collisionDataSource, Func<Collider> collidingOtherSource)

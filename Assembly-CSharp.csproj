@@ -220,6 +220,7 @@
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_CommandChain.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_Ext.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_FTimingExt.cs" />
+    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_Inject.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_NoiseVec3.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_SingleSelectExt.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_ValveExt.cs" />
