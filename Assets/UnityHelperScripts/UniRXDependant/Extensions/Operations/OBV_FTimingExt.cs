@@ -33,16 +33,18 @@ namespace SUHScripts
             @this.TrackTimer(time, timerUpdater)
             .Select(inputs => selector(inputs.timer, inputs.value));
 
-        public static IObservable<(T value, FTimer timer)> TimerScan<T>(this IObservable<T> @this, Func<T, float> tickFunction, Func<FTimer> seed)
-        {
-            (T value, FTimer timer) seedInput = (default, seed());
+        public static IObservable<(T value, FTimer timer)> TimerScan<T>(this IObservable<T> @this, Func<T, float> tickFunction, Func<FTimer> seed) =>
+            Observable.Create<(T value, FTimer timer)>(observer =>
+            {
+                (T value, FTimer timer) seedInput = (default, seed());
 
-            return
-            @this.Scan(
-                    seedInput,
-                    (state, value) => (value, state.timer.Tick(tickFunction(value))))
-                .TakeWhile_IncludeLast(inputs => !inputs.timer.HasCompleted());
-        }
+                return
+                @this.Scan(
+                        seedInput,
+                        (state, value) => (value, state.timer.Tick(tickFunction(value))))
+                    .TakeWhile_IncludeLast(inputs => !inputs.timer.HasCompleted())
+                    .Subscribe(observer.OnNext, observer.OnError, observer.OnCompleted);
+            });
     }
 
 }

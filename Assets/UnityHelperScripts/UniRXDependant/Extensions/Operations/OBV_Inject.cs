@@ -12,7 +12,7 @@ namespace SUHScripts
         public static IObservable<R> Inject<T, U, R>(this IObservable<T> @this, IObservable<U> catalyst, Func<T, U, R> injection, U startWith) =>
             Observable.Create<R>(observer =>
             {
-                var disp = new CompositeDisposable();
+                var disp = new List<IDisposable>();
 
                 var u = startWith;
 
@@ -28,13 +28,13 @@ namespace SUHScripts
                     onError: observer.OnError)
                 .AddTo(disp) ;
 
-                return disp;
+                return new CompositeDisposable(disp) ;
             });
 
         public static IObservable<R> InjectionValve<T, U, R>(this IObservable<T> @this, IObservable<U> catalyst, Func<U, Option<U>> valveSelection, Func<T, U, R> selector, Option<U> startWith) =>
             Observable.Create<R>(observer =>
             {
-                var disp = new CompositeDisposable();
+                var disp = new List<IDisposable>();
 
                 var optU = startWith;
 
@@ -51,7 +51,7 @@ namespace SUHScripts
                     onCompleted:observer.OnCompleted)
                 .AddTo(disp);
 
-                return disp;
+                return new CompositeDisposable(disp);
 
             });
 

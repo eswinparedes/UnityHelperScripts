@@ -26,7 +26,7 @@ namespace SUHScripts
                 m_positionOffsetProvider.AddTo(this);
 
                 m_positionOffsetProvider
-                    .CombinedLatestScanner(
+                    .ReduceLatestBy(
                     this.FixedUpdateAsObservable(),
                     (vectors, _) =>
                     {

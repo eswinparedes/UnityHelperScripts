@@ -12,7 +12,7 @@ namespace SUHScripts
         }
         public static bool IsNull<T>(this T @this)
         {
-            return @this.Equals(null) || ReferenceEquals(@this, null) || @this == null;
+            return @this == null || ReferenceEquals(@this, null) || @this.Equals(null);
         }
     }
 

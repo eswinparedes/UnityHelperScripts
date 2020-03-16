@@ -43,4 +43,12 @@ namespace SUHScripts.Tests
             new PerlinNoiseData_Constant(frequency, amplitude);
     }
 
+    public class PerlinNoiseData_PulsePopper
+    {
+        [SerializeField] PerlinNoiseData_Pulse m_noise = default;
+
+        public INoiseGenerator Pop() =>
+            new PerlinNoiseData_Pulse(m_noise.Frequency, m_noise.Amplitude, m_noise.Duration, m_noise.BlendOverLifeTime);
+    }
+
 }
