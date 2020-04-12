@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UniRx;
-
+using SUHScripts.Pending;
 namespace SUHScripts
 {
     using Functional;
@@ -20,45 +20,6 @@ namespace SUHScripts
             @this
             .Select(obs => obs.OnExit)
             .Merge();
-
-        public static bool Any(this Dictionary<Collider, int> @this, Collider col)
-        {
-            if (@this.ContainsKey(col))
-            {
-                return @this[col] > 0;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        
-
-        public static void Increment(this Dictionary<Collider, int> @this, Collider col)
-        {
-            if (@this.ContainsKey(col))
-            {
-                @this[col] = @this[col] + 1;
-            }
-            else
-            {
-                @this.Add(col, 1);
-            }
-        }
-
-        public static void Decrement(this Dictionary<Collider, int> @this, Collider col)
-        {
-            if (@this.ContainsKey(col))
-            {
-                @this[col] = @this[col] - 1;
-
-                if (@this[col] <= 0)
-                {
-                    @this.Remove(col);
-                }
-            }
-        }
-
         public static IObservable<Option<T>> OnEnterComponentOption<T>(this A_ColliderObservable @this) =>
             @this
             .OnEnter
@@ -88,82 +49,23 @@ namespace SUHScripts
             return (comp.OnEnter, comp.OnExit);
         }
 
-        public static (IObservable<ICollisionObservation> onEnter, IObservable<ICollisionObservation> onExit)
-            ObserveCollisionsGrouped(IReadOnlyList<Collider> collidersToObserve, Component disposalTarget)
-        {
-            List<M_ColliderObservable> attachedObservables = new List<M_ColliderObservable>();
-
-            for(int i = 0; i < collidersToObserve.Count(); i++)
+        public static IObservable<EnterExitable<ICollisionObservation>> ObserveCollisionsGrouped(IReadOnlyList<Collider> collidersToObserve) =>
+            Observable.Create<EnterExitable<ICollisionObservation>>(observer =>
             {
-                var colObservable =
-                    collidersToObserve[i].gameObject.GetOrAddComponent<M_ColliderObservable>();
+                List<M_ColliderObservable> attachedObservables = new List<M_ColliderObservable>();
 
-                attachedObservables.Add(colObservable);
-            }
-
-            var onEnterSubject = new Subject<ICollisionObservation>();
-            var onExitSubject = new Subject<ICollisionObservation>();
-            var collisionsSustained = new Dictionary<Collider, int>();
-
-            var anyEnterObserved =
-                attachedObservables
-                .OnEnterAny()
-                .Subscribe(output =>
+                for (int i = 0; i < collidersToObserve.Count(); i++)
                 {
-                    if (!collisionsSustained.Any(output.CollidingOther))
-                        onEnterSubject.OnNext(output);
+                    var colObservable = collidersToObserve[i].gameObject.GetOrAddComponent<M_ColliderObservable>();
 
-                    collisionsSustained.Increment(output.CollidingOther);
+                    attachedObservables.Add(colObservable);
+                }
 
-                })
-                .AddTo(disposalTarget);
+                var entered = attachedObservables.OnEnterAny();
+                var exited = attachedObservables.OnExitAny();
 
-            var anyExitObserved =
-                attachedObservables
-                .OnExitAny()
-                .Subscribe(output =>
-                {
-                    collisionsSustained.Decrement(output.CollidingOther);
-
-                    if (!collisionsSustained.Any(output.CollidingOther))
-                        onExitSubject.OnNext(output);
-
-                })
-                .AddTo(disposalTarget);
-
-            return (onEnterSubject, onExitSubject);
-        }
-
-        public static (IObservable<ICollisionObservation> onEnter, IObservable<ICollisionObservation> onExit)
-           ObserveCollisionsToggled(IObservable<ICollisionObservation> onEnter, IObservable<ICollisionObservation> onExit, Component disposalTarget)
-        {
-            var onEnterSubject = new Subject<ICollisionObservation>();
-            var onExitSubject = new Subject<ICollisionObservation>();
-
-            var collidersEntered = new HashSet<Collider>();
-
-            onEnter
-                .Where(result => !collidersEntered.Contains(result.CollidingOther))
-                .Subscribe(result =>
-                {
-                    collidersEntered.Add(result.CollidingOther);
-                    onEnterSubject.OnNext(result);
-                })
-                .AddTo(disposalTarget);
-
-            onExit
-                .Where(result => collidersEntered.Contains(result.CollidingOther))
-                .Subscribe(result =>
-                {
-                    collidersEntered.Remove(result.CollidingOther);
-                    onExitSubject.OnNext(result);
-                })
-                .AddTo(disposalTarget);
-
-            return (onEnterSubject, onExitSubject);
-        }
-
-
+                return OBV_EnterExit.EnterExitByCount(entered, exited, col => col.CollidingOther).Subscribe(observer);
+            });
     }
 }
 

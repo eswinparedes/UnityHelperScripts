@@ -4,7 +4,7 @@ using UnityEngine;
 namespace SUHScripts
 {
     [CreateAssetMenu(menuName = "SUHS/Audio/Audio Pool Data")]
-    public class SO_AudioPoolData : ScriptableObject
+    public class SO_AudioPoolData : AAudioPoolData
     {
         [Header("Loop defaults to min settings")]
         [SerializeField] Vector2 m_volumeRange = new Vector2(1, 1);
@@ -12,10 +12,10 @@ namespace SUHScripts
         [SerializeField] Vector2 m_spatialBlendRange = new Vector2(0, 0);
         [SerializeField] List<AudioClip> m_clips = default;
 
-        public AudioClip Clip =>
+        public override AudioClip Clip =>
             m_clips.RandomElement();
 
-        public PoolableAudioSettings Settings
+        public override PoolableAudioSettings Settings
         {
             get
             {

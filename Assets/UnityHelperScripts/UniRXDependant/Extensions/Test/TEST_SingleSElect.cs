@@ -29,7 +29,7 @@ namespace SUHScripts.Tests
                 .Choose(ray => SUHScripts.PhysicsCasting.Raycast(ray).RaycastHitOption)
                 .Select(hit => hit.collider.transform.AsOption())
                 .Merge(key)
-                .SingleSelectToggler((t0, t1) => t0 == t1);
+                .ToggleSelect((t0, t1) => t0 == t1);
 
 
             singleSelector

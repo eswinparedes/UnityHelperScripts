@@ -68,7 +68,7 @@ namespace SUHScripts
             PlaySoundOneShot(clip, QuickSettings);
         }
 
-        public static void PlaySoundOneShot(SO_AudioPoolData data)
+        public static void PlaySoundOneShot(IAudioPoolData data)
         {
             PlaySoundOneShot(data.Clip, data.Settings);
         }
@@ -78,7 +78,7 @@ namespace SUHScripts
             PlaySoundOneShot(clip, QuickSettings, location.position);
         }
 
-        public static void PlaySoundOneShot(SO_AudioPoolData data, Transform location)
+        public static void PlaySoundOneShot(IAudioPoolData data, Transform location)
         {
             PlaySoundOneShot(data.Clip, data.Settings, location.position);
         }
@@ -88,7 +88,7 @@ namespace SUHScripts
             PlaySoundOneShot(clip, QuickSettings, location);
         }
 
-        public static void PlaySoundOneShot(SO_AudioPoolData data, Vector3 location)
+        public static void PlaySoundOneShot(IAudioPoolData data, Vector3 location)
         {
             PlaySoundOneShot(data.Clip, data.Settings, location);
         }

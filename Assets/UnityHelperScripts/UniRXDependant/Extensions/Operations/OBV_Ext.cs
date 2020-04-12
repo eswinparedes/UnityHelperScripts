@@ -279,6 +279,9 @@ namespace SUHScripts
                 return new CompositeDisposable(subs);
             });
 
+        public static IObservable<Unit> FirstCompleted<T0, T1>(this IObservable<T0> obv0, IObservable<T1> obv1) =>
+            obv0.FirstCompleted(obv1, () => Unit.Default, () => Unit.Default);
+
         /// <summary>
         /// Returns Some T if there was a last value, otherwise returns NONE if observable completes without a last value observed
         /// </summary>
@@ -417,5 +420,51 @@ namespace SUHScripts
 
         public static IObservable<T> AsNew<T>(this IObservable<T> @this) =>
             @this.AsObservable();
+
+        public static IObservable<T> CompleteOnlyWith<T, U>(this IObservable<T> source, IObservable<U> other) =>
+        Observable.Create<T>(observer =>
+        {
+            return
+            source.Concat(Observable.Never<T>())
+            .TakeDuring(other)
+            .Subscribe(observer);
+        });
+
+        public static IObservable<Option<T>> ConcatNone<T>(this IObservable<T> @this) =>
+    @this.Select(t => t.AsOption()).Concat(ReturnNone<T>());
+
+        public static IObservable<Option<T>> ReturnNone<T>() =>
+            Observable.Return((Option<T>)None.Default);
+
+        /// <summary>
+        /// observer begins by observing 'source' stream
+        /// When 'switchStream' emits 'Some' value, observer begins observing the switch stream. 
+        /// When switchStream emits 'None" value, observer returns to 'source' stream
+        /// Observer goes back and forth as determined by 'switchStream's' emissions of 'Some' and 'None' values
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="switchStream"></param>
+        /// <returns></returns>
+        public static IObservable<T> SwitchValve<T>(this IObservable<T> source, IObservable<Option<T>> switchStream) =>
+            Observable.Create<T>(observer =>
+            {
+                var switchValve =
+                    switchStream.Select(opt => !opt.IsSome)
+                    .DistinctUntilChanged()
+                    .Concat(Observable.Return(true));
+
+                var sourceSub = source.Valve(switchValve, true).Subscribe(observer);
+
+                var switchSub =
+                    switchStream.Valve(switchValve.Select(allowSource => !allowSource), false)
+                    .Choose(opt => opt)
+                    .Subscribe(t => observer.OnNext(t));
+
+                return new CompositeDisposable(sourceSub, switchSub);
+            });
+
+        public static IObservable<T> SwitchValve<T>(this IObservable<T> source, params IObservable<Option<T>>[] switchStreams) =>
+            source.SwitchValve(switchStreams.Merge());
     }
 }

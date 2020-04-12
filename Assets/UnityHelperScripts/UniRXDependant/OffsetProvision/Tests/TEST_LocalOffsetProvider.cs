@@ -31,7 +31,7 @@ namespace SUHScripts.Tests
 
             offsetStream
                 .StartWith(Observable.Return(Vector3.one))
-                .Subscribe(offset => OBV_LocalPositionOffset.SubscribeLocalOffsetProvider(offset, m_target).AddTo(this))
+                .Subscribe(offset => OBV_LocalPositionOffset.SubscribeLocalPositionOffsetProvider(offset, m_target).AddTo(this))
                 .AddTo(this);
 
             ///A

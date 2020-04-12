@@ -7,42 +7,44 @@ namespace SUHScripts
 {
     public class OBV_LocalPositionOffset : MonoBehaviour
     {
-        public static IDisposable SubscribeLocalOffsetProvider(IObservable<Vector3> offsetProvider, Transform target)
+        public static IDisposable SubscribeLocalPositionOffsetProvider(IObservable<Vector3> offsetProvider, Transform target)
         {
             var obvs = target.gameObject.GetOrAddComponent<PositionOffsetObserver>();
-            return obvs.PushOffsetProvider(offsetProvider);
+            return obvs.PushPositionOffsetProvider(offsetProvider);
+        }
+
+        public static IDisposable SubscribeLocalEulerOffsetProvider(IObservable<Vector3> offsetProvider, Transform target)
+        {
+            var obvs = target.gameObject.GetOrAddComponent<PositionOffsetObserver>();
+            return obvs.PushEulerOffsetProvider(offsetProvider);
         }
 
         class PositionOffsetObserver : MonoBehaviour
         {
-            Subject<IObservable<Vector3>> m_positionOffsetProvider = new Subject<IObservable<Vector3>>();
-
-            public Vector3 SourceLocalOffset { get; set; } = Vector3.zero;
-
+            Subject<IObservable<Vector3>> m_localPositionOffsetProvider = new Subject<IObservable<Vector3>>();
+            Subject<IObservable<Vector3>> m_localEulerOffsetProvider = new Subject<IObservable<Vector3>>();
+            public Vector3 SourceLocalPositionOffset { get; set; } = Vector3.zero;
+            public Vector3 SourceLocalEulerOffset { get; set; }
             private void Awake()
             {
-                SourceLocalOffset = transform.localPosition;
+                SourceLocalPositionOffset = transform.localPosition;
 
-                m_positionOffsetProvider.AddTo(this);
+                m_localPositionOffsetProvider.AddTo(this);
 
-                m_positionOffsetProvider
-                    .ReduceLatestBy(
-                    this.FixedUpdateAsObservable(),
-                    (vectors, _) =>
-                    {
-                        var v = SourceLocalOffset;
-                        foreach (var vec in vectors)
-                        {
-                            v += vec;
-                        }
+                m_localPositionOffsetProvider
+                    .ReduceLatestBy(this.FixedUpdateAsObservable(), (vectors, _) => vectors.Average())
+                    .Subscribe(offset => transform.localPosition = SourceLocalPositionOffset + offset)
+                    .AddTo(this);
 
-                        return v;
-                    })
-                    .Subscribe(offset => transform.localPosition = offset)
+                SourceLocalEulerOffset = transform.localEulerAngles;
+
+                m_localEulerOffsetProvider
+                    .ReduceLatestBy(this.FixedUpdateAsObservable(), (vectors, _) => vectors.Average())
+                    .Subscribe(offset => transform.localEulerAngles = SourceLocalEulerOffset + offset)
                     .AddTo(this);
             }
 
-            public IDisposable PushOffsetProvider(IObservable<Vector3> provider)
+            public IDisposable PushPositionOffsetProvider(IObservable<Vector3> provider)
             {
                 var tempSub = new Subject<Vector3>();
 
@@ -50,7 +52,25 @@ namespace SUHScripts
                     provider.Subscribe(tempSub)
                     .AddTo(this);
 
-                m_positionOffsetProvider.OnNext(tempSub);
+                m_localPositionOffsetProvider.OnNext(tempSub);
+
+                return Disposable.Create(() =>
+                {
+                    tempSubDisp.Dispose();
+                    tempSub.OnCompleted();
+                    tempSub.Dispose();
+                });
+            }
+
+            public IDisposable PushEulerOffsetProvider(IObservable<Vector3> provider)
+            {
+                var tempSub = new Subject<Vector3>();
+
+                var tempSubDisp =
+                    provider.Subscribe(tempSub)
+                    .AddTo(this);
+
+                m_localEulerOffsetProvider.OnNext(tempSub);
 
                 return Disposable.Create(() =>
                 {

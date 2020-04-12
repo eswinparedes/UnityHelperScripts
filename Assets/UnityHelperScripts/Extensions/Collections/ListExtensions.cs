@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SUHScripts
@@ -39,9 +40,49 @@ namespace SUHScripts
             return false;
         }
 
-        public static T RandomElement<T>(this List<T> list)
+        public static T RandomElement<T>(this IReadOnlyList<T> list)
         {
-            return list[Random.Range(0, list.Count)];
+            return list[UnityEngine.Random.Range(0, list.Count)];
+        }
+
+        public static IReadOnlyList<R> Select<T, R>(this IReadOnlyList<T> list, Func<T, R> selector)
+        {
+            var rList = new List<R>();
+            for(int i = 0; i < list.Count; i++)
+            {
+                rList.Add(selector(list[i]));
+            }
+
+            return rList;
+        }
+
+        /// <summary>
+        /// Experimental
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="other"></param>
+        /// <param name="comparator"></param>
+        /// <returns></returns>
+        public static bool AllItemsComparesToOneOther<T>(this IReadOnlyList<T> source, IReadOnlyList<T> other, Func<T, T, bool> comparator)
+        {
+            if (source.Count != other.Count) return false;
+
+            var matches = new HashSet<int>();
+
+            for(int i =0; i < source.Count; i++)
+            {
+                for(int j = 0; j < other.Count; j++)
+                {
+                    if(!matches.Contains(j) && comparator(source[i], other[j]))
+                    {
+                        matches.Add(j);
+                        continue;
+                    }
+                }
+            }
+
+            return matches.Count == source.Count;
         }
     }
 }

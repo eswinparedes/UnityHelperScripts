@@ -76,5 +76,11 @@ namespace SUHScripts
         public static Vector3 GetOffsetToLocal(this Transform from, Vector3 to, Vector3 offsetMask) =>
             Vector3.Scale(from.GEtOffsetToLocal(to), offsetMask);
         #endregion
+
+        public static Vector3[] Positions(this Transform[] @this) =>
+            @this.Select(t => t.position);
+
+        public static IReadOnlyList<Vector3> Positions(this IReadOnlyList<Transform> @this) =>
+            @this.Select(t => t.position);
     }
 }

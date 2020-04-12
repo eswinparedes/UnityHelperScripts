@@ -63,7 +63,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\__UHS_UPDATE\SO_Tag.cs" />
     <Compile Include="Assets\UnityHelperScripts\Extensions\Collections\ArrayExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\Extensions\Collections\IEnumerableExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\Extensions\Collections\ListExtensions.cs" />
@@ -123,6 +122,7 @@
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\Algorithm\PrefabPool.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\Algorithm\PrefabPoolingSystem.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\AudioPooling\AudioPool.cs" />
+    <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\AudioPooling\Debug\AudioPoolModels.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\AudioPooling\Debug\M_AudioPoolSource.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\AudioPooling\Debug\M_AudioPoolTest.cs" />
     <Compile Include="Assets\UnityHelperScripts\General\ObjectPooling\AudioPooling\Debug\SO_AudioPoolData.cs" />
@@ -167,9 +167,9 @@
     <Compile Include="Assets\UnityHelperScripts\Math\MathHelper.cs" />
     <Compile Include="Assets\UnityHelperScripts\Math\Radial.cs" />
     <Compile Include="Assets\UnityHelperScripts\Math\Tests\OrthoNormalTest.cs" />
+    <Compile Include="Assets\UnityHelperScripts\Math\Tests\PlanePositionFitter.cs" />
     <Compile Include="Assets\UnityHelperScripts\Math\Tests\RadialMenuTest.cs" />
     <Compile Include="Assets\UnityHelperScripts\Math\U_Util.cs" />
-    <Compile Include="Assets\UnityHelperScripts\Pending\Pending.cs" />
     <Compile Include="Assets\UnityHelperScripts\Structures\Arc\ArcCast\ArcCaster.cs" />
     <Compile Include="Assets\UnityHelperScripts\Structures\Arc\ArcCast\ArcCastLineRender.cs" />
     <Compile Include="Assets\UnityHelperScripts\Structures\Arc\ArcCast\ArcCastSystem.cs" />
@@ -203,13 +203,7 @@
     <Compile Include="Assets\UnityHelperScripts\Tools\Testing.cs" />
     <Compile Include="Assets\UnityHelperScripts\Tools\ToolSet.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\Attachments\A_ColliderObservable.cs" />
-    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\Attachments\A_ColliderObservable2D.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\Attachments\M_ColliderObservable.cs" />
-    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\Attachments\M_ColliderObservable2D.cs" />
-    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\Attachments\M_ColliderObservable2DGrouped.cs" />
-    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\Attachments\M_GroupedColliderObservable.cs" />
-    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\Attachments\M_ToggleColliderObservables.cs" />
-    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\ColliderObservable2DOperations.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\CollisionObservableEffectModels.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\CollisionObservableEffectOperations.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Collision\Test\CollisionObservableTesting.cs" />
@@ -219,6 +213,7 @@
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Behaviours\SubscribeExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Models\DisposableValue.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_CommandChain.cs" />
+    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_EnterExit.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_Ext.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_FTimingExt.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\OBV_Inject.cs" />
@@ -229,6 +224,7 @@
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\Testing\TEST_ObserveNoiseGenerators.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\Testing\TEST_OBV_CommandChain.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Operations\Testing\TEST_TestTakeDuring.cs" />
+    <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\PendingObservableExtensions.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Test\ScannerTest.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Extensions\Test\TEST_SingleSElect.cs" />
     <Compile Include="Assets\UnityHelperScripts\UniRXDependant\Misc\M_UpdateManager.cs" />

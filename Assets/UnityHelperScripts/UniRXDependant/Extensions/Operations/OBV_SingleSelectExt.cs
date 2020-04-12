@@ -15,7 +15,7 @@ public static class OBV_SingleSelectExt
     /// <param name="this"></param>
     /// <param name="equalsComparer"></param>
     /// <returns></returns>
-    public static IObservable<ASingleSelect<T>> SingleSelectToggler<T>(this IObservable<Option<T>> @this, Func<T, T, bool> equalsComparer) =>
+    public static IObservable<ASingleSelect<T>> ToggleSelect<T>(this IObservable<Option<T>> @this, Func<T, T, bool> equalsComparer) =>
             @this      
             .Scan(new SingleSelect<T>(), (lastSingleSelect, newIn) =>
             {
@@ -29,7 +29,7 @@ public static class OBV_SingleSelectExt
                 }
             });
 
-    public static IObservable<ASingleSelect<T>> SingleSelectToggler_Published<T>(this IObservable<Option<T>> @this, Func<T, T, bool> equalsComparer)
+    public static IObservable<ASingleSelect<T>> ToggleSelect_Published<T>(this IObservable<Option<T>> @this, Func<T, T, bool> equalsComparer)
     {
         var singleSelect = new SingleSelect_Mutable<T>();
 
@@ -54,7 +54,51 @@ public static class OBV_SingleSelectExt
 
         return obvPublish;
     }
+
+    public static IObservable<ASingleSelect<T>> NewEntrySelect<T>(this IObservable<Option<T>> source, Func<T, T, bool> comparer) =>
+            Observable.Create<ASingleSelect<T>>(observer =>
+            {
+                Option<T> current = None.Default;
+                var selector = new SingleSelect_Mutable<T>();
+
+                return source.Subscribe(
+                   onNext: optIn =>
+                   {
+                       if (current.IsSome)
+                       {
+                           if (optIn.IsSome) //If our input is some and does not compare to current, select input and deselect current
+                           {
+                               var doesCompare = comparer(current.Value, optIn.Value);
+                               if (!doesCompare)
+                               {
+                                   selector.Apply(select: optIn.Value, deselect: current.Value);
+                                   current = optIn;
+                                   observer.OnNext(selector);
+                               }
+                           }
+                           else //If our input is NONE then deselect current
+                           {
+                               selector.Apply(select: None.Default, deselect: current.Value);
+                               current = None.Default;
+                               observer.OnNext(selector);
+                           }
+                       }
+                       else
+                       {
+                           if (optIn.IsSome) //Current is NONE and we have some input value
+                           {
+                               selector.Apply(select: optIn.Value, deselect: None.Default);
+                               current = optIn;
+                               observer.OnNext(selector);
+                           }
+                       }
+                   },
+                   onCompleted: observer.OnCompleted,
+                   onError: observer.OnError);
+            });
 }
+
+
 
 public abstract class ASingleSelect<T>
 {
