@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SUHScripts.Functional;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UniRx;
@@ -45,6 +46,46 @@ namespace SUHScripts
                     .TakeWhile_IncludeLast(inputs => !inputs.timer.HasCompleted())
                     .Subscribe(observer.OnNext, observer.OnError, observer.OnCompleted);
             });
-    }
 
+        public static IObservable<FTimer> TimerPingPongByEmission(this IObservable<bool> @this, IObservable<float> timerTickStream, float length) =>
+            Observable.Create<FTimer>(observer =>
+            {
+                if (length <= 0)
+                {
+                    return @this.Select(shouldIncrement => shouldIncrement ? new FTimer(0, 0, true) : new FTimer(0, 0, false)).Subscribe(observer);
+                }
+
+                var activeTimer = (Option<FTimer>)None.Default;
+
+                var sub0 = @this.Subscribe(shouldIncrement =>
+                {
+                    if (!activeTimer.IsSome)
+                    {
+                        var startTime = shouldIncrement ? 0 : length;
+                        activeTimer = new FTimer(length, startTime, shouldIncrement);
+                    }
+                    else
+                    {
+                        var isDifferent = shouldIncrement != activeTimer.Value.IsIncrementing;
+                        activeTimer = activeTimer.Value.Restarted(isDifferent, isDifferent);
+                        observer.OnNext(activeTimer.Value);
+
+                    }
+                });
+
+                var sub1 = timerTickStream.Subscribe(
+                    tick =>
+                    {
+                        if (!activeTimer.Value.HasCompleted() && activeTimer.IsSome)
+                        {
+                            activeTimer = activeTimer.Value.Tick(tick);
+                            observer.OnNext(activeTimer.Value);
+                        }
+                    },
+                    observer.OnError,
+                    observer.OnCompleted);
+
+                return new CompositeDisposable(sub0, sub1);
+            });
+    }
 }

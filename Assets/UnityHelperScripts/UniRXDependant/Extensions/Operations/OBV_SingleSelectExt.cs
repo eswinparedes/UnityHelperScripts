@@ -1,4 +1,5 @@
-﻿using SUHScripts.Functional;
+﻿using SUHScripts;
+using SUHScripts.Functional;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ public static class OBV_SingleSelectExt
     /// <param name="equalsComparer"></param>
     /// <returns></returns>
     public static IObservable<ASingleSelect<T>> ToggleSelect<T>(this IObservable<Option<T>> @this, Func<T, T, bool> equalsComparer) =>
-            @this      
+            @this
             .Scan(new SingleSelect<T>(), (lastSingleSelect, newIn) =>
             {
                 if (lastSingleSelect.Select.IsSome && newIn.IsSome && equalsComparer(lastSingleSelect.Select.Value, newIn.Value))
@@ -29,37 +30,10 @@ public static class OBV_SingleSelectExt
                 }
             });
 
-    public static IObservable<ASingleSelect<T>> ToggleSelect_Published<T>(this IObservable<Option<T>> @this, Func<T, T, bool> equalsComparer)
-    {
-        var singleSelect = new SingleSelect_Mutable<T>();
-
-        var obvPublish =
-            @this
-            .Scan(singleSelect, (lastSingleSelect, newIn) =>
-            {
-                if (lastSingleSelect.Select.IsSome && newIn.IsSome && equalsComparer(lastSingleSelect.Select.Value, newIn.Value))
-                {
-                    singleSelect.Apply(select: NONE, deselect: newIn);
-                }
-                else
-                {
-                    singleSelect.Apply(select: newIn, deselect: lastSingleSelect.Select);
-                }
-
-                return singleSelect;
-            })
-            .Publish();
-
-        obvPublish.Connect();
-
-        return obvPublish;
-    }
-
     public static IObservable<ASingleSelect<T>> NewEntrySelect<T>(this IObservable<Option<T>> source, Func<T, T, bool> comparer) =>
             Observable.Create<ASingleSelect<T>>(observer =>
             {
                 Option<T> current = None.Default;
-                var selector = new SingleSelect_Mutable<T>();
 
                 return source.Subscribe(
                    onNext: optIn =>
@@ -71,14 +45,14 @@ public static class OBV_SingleSelectExt
                                var doesCompare = comparer(current.Value, optIn.Value);
                                if (!doesCompare)
                                {
-                                   selector.Apply(select: optIn.Value, deselect: current.Value);
+                                   var selector = new SingleSelect<T>(select: optIn.Value, deselect: current.Value);
                                    current = optIn;
                                    observer.OnNext(selector);
                                }
                            }
                            else //If our input is NONE then deselect current
                            {
-                               selector.Apply(select: None.Default, deselect: current.Value);
+                               var selector = new SingleSelect<T>(select: None.Default, deselect: current.Value);
                                current = None.Default;
                                observer.OnNext(selector);
                            }
@@ -87,7 +61,7 @@ public static class OBV_SingleSelectExt
                        {
                            if (optIn.IsSome) //Current is NONE and we have some input value
                            {
-                               selector.Apply(select: optIn.Value, deselect: None.Default);
+                               var selector = new SingleSelect<T>(select: optIn.Value, deselect: None.Default);
                                current = optIn;
                                observer.OnNext(selector);
                            }
@@ -95,6 +69,36 @@ public static class OBV_SingleSelectExt
                    },
                    onCompleted: observer.OnCompleted,
                    onError: observer.OnError);
+            });
+
+    public static IObservable<ASingleSelect<T>> SingleStopSelect<T>(this IObservable<EnterExitable<T>> @this, Func<T, T, bool> comparer) =>
+            Observable.Create<ASingleSelect<T>>(observer =>
+            {
+                EnterExitable<T> selected = null;
+                return
+                @this.Subscribe(inComing =>
+                {
+                    if (selected == null)
+                    {
+                        if (inComing.IsEntered)
+                        {
+                            selected = inComing;
+                            observer.OnNext(new SingleSelect<T>(select: selected.Value.AsOption(), deselect: None.Default));
+                        }
+                    }
+                    else
+                    {
+                        if (comparer(selected.Value, inComing.Value))
+                        {
+                            if (selected.IsEntered && !inComing.IsEntered)
+                            {
+                                selected = null;
+                                observer.OnNext(new SingleSelect<T>(select: None.Default, deselect: inComing.Value));
+                            }
+                        }
+                    }
+                    // if (canComeNext) observer.OnNext(new SingleSelect<T>(cur.Value.AsOption(), None.Default));
+                }, observer.OnError, observer.OnCompleted);
             });
 }
 

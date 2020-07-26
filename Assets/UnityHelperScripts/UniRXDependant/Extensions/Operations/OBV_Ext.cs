@@ -15,9 +15,15 @@ namespace SUHScripts
         public static IObservable<T> DoLog<T>(this IObservable<T> @this, string message) =>
             @this.Do(value => Debug.Log($"{message} : {value}"));
         public static IObservable<T> SelectSome<T>(this IObservable<Option<T>> @this) =>
-            @this
-            .Where(opt => opt.IsSome)
-            .Select(opt => opt.Value);
+            Observable.Create<T>(observer =>
+            {
+                return
+                @this.Subscribe(
+                    opt =>
+                    {
+                        if (opt.IsSome) observer.OnNext(opt.Value);
+                    }, observer.OnError, observer.OnCompleted);
+            });
 
         /// <summary>
         /// Returns a stream that only emits when the Option is some and flattens the value out

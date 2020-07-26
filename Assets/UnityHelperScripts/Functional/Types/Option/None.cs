@@ -2,6 +2,6 @@
 {
     public struct None
     {
-        internal static readonly None Default = new None();
+        public static readonly None Default = new None();
     }
 }
