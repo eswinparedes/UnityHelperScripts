@@ -1,0 +1,18 @@
+{
+    "name": "RX_EXT",
+    "references": [
+        "GUID:a1429078971351e4b9eb3d17977955f5",
+        "GUID:0490d7e42c39c954fbc6cb5149cabec1",
+        "GUID:d0bdd5cbe2892af4fabb6d25e9a6590c",
+        "GUID:d60799ab2a985554ea1a39cd38695018"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
