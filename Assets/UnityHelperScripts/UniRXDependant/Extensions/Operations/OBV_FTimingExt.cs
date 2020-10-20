@@ -87,5 +87,58 @@ namespace SUHScripts
 
                 return new CompositeDisposable(sub0, sub1);
             });
+
+        public static IObservable<Unit> AutomaticFire(this IObservable<bool> triggerPullStream, IObservable<float> tick, float firePerSecond) =>
+            Observable.Create<Unit>(observer =>
+            {
+                var cleanPulls = triggerPullStream.DistinctUntilChanged();
+                var timer = new FTimer(firePerSecond, firePerSecond);
+                bool isPulling = false;
+
+                var tickSub = tick.Subscribe(delta =>
+                {
+                    if (timer.HasCompleted())
+                    {
+                        if (isPulling)
+                        {
+                            observer.OnNext(Unit.Default);
+                            timer = timer.Restarted();
+                        }
+                    }
+                    timer = timer.Tick(delta);
+                });
+
+                var pullSub = cleanPulls.Subscribe(isPull => isPulling = isPull);
+
+                return new CompositeDisposable(tickSub, pullSub);
+            });
+
+        public static IObservable<Unit> SemiAutomaticFire(this IObservable<bool> triggerPullStream, IObservable<float> tick, float firePerSecond) =>
+            Observable.Create<Unit>(observer =>
+            {
+                var cleanPulls = triggerPullStream.DistinctUntilChanged();
+                var timer = new FTimer(firePerSecond, firePerSecond);
+                var isPulling = false;
+                var pullState = new BoolTrifecta();
+
+                var tickSub = tick.Subscribe(delta =>
+                {
+                    if (timer.HasCompleted())
+                    {
+                        if (pullState.IsTrueThisFrame)
+                        {
+                            observer.OnNext(Unit.Default);
+                            timer = timer.Restarted();
+                        }
+                    }
+
+                    pullState = pullState.GetUpdateFromInput(isPulling);
+                    timer = timer.Tick(delta);
+                });
+
+                var pullSub = cleanPulls.Subscribe(isPull => isPulling = isPull);
+
+                return new CompositeDisposable(tickSub, pullSub);
+            });
     }
 }

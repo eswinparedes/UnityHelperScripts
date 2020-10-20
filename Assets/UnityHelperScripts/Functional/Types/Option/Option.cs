@@ -16,6 +16,11 @@ namespace SUHScripts.Functional
             this.value = value;
         }
 
+        public static Option<TOut> FromValueType<TOut>(TOut value) where TOut : struct
+        {
+            return new Option<TOut>(value);
+        }
+
         public static implicit operator Option<T>(None _) =>
             new Option<T>();
 

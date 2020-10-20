@@ -38,11 +38,168 @@ namespace SUHScripts
         public static Vector2 AsXY(this Vector3 @this) =>
             new Vector2(@this.x, @this.y);
 
-        public static Vector3 Average(this IEnumerable<Vector3> @this) =>
-            @this.Aggregate((x, y) => x + y) / @this.Count();
+        public static Vector3 Average(this IReadOnlyList<Vector3> @this)
+        {
+            var v = Vector3.zero;
 
-        public static Vector3 Sum(this IEnumerable<Vector3> @this) =>
-            @this.Aggregate((x, y) => x + y);
+            for (int i = 0; i < @this.Count; i++)
+            {
+                v += @this[i];
+            }
+
+            return @this.Count > 0 ? v / @this.Count : v;
+        }
+
+        public static Vector3 Average(this IEnumerable<Vector3> @this)
+        {
+            var v = Vector3.zero;
+
+            foreach (var ve in @this)
+            {
+                v += ve;
+            }
+            var c = @this.Count();
+
+            return c > 0 ? v / c : v;
+        }
+
+        public static Vector3 MaxBySqMagnitude(this IReadOnlyList<Vector3> @this)
+        {
+            var v = @this[0];
+
+            for (int i = 0; i < @this.Count; i++)
+            {
+                if (@this[i].sqrMagnitude > v.sqrMagnitude) v = @this[i];
+            }
+
+            return v;
+        }
+
+        public static Vector3 MaxBySqMagnitude(this IEnumerable<Vector3> @this)
+        {
+            var v = @this.First();
+
+            foreach (var ve in @this)
+            {
+                if (ve.sqrMagnitude > v.sqrMagnitude) v = ve;
+            }
+
+            return v;
+        }
+
+        public static Vector3 MinBySqMagnitude(this IReadOnlyList<Vector3> @this)
+        {
+            var v = @this[0];
+
+            for (int i = 0; i < @this.Count; i++)
+            {
+                if (@this[i].sqrMagnitude < v.sqrMagnitude) v = @this[i];
+            }
+
+            return v;
+        }
+
+        public static Vector3 MinBySqMagnitude(this IEnumerable<Vector3> @this)
+        {
+            var v = @this.First();
+
+            foreach (var ve in @this)
+            {
+                if (ve.sqrMagnitude < v.sqrMagnitude) v = ve;
+            }
+
+            return v;
+        }
+
+        public static Vector3 MaxComponents(this IReadOnlyList<Vector3> @this)
+        {
+            var v = @this[0];
+
+            for (int i = 0; i < @this.Count; i++)
+            {
+                var n = @this[i];
+
+                if (n.x > v.x) v.x = n.x;
+                if (n.y > v.y) v.y = n.y;
+                if (n.z > v.z) v.z = n.z;
+            }
+
+            return v;
+        }
+
+        public static Vector3 MaxComponents(this IEnumerable<Vector3> @this)
+        {
+            var v = @this.First();
+
+            foreach (var ve in @this)
+            {
+                var n = ve;
+
+                if (n.x > v.x) v.x = n.x;
+                if (n.y > v.y) v.y = n.y;
+                if (n.z > v.z) v.z = n.z;
+            }
+
+            return v;
+        }
+
+        public static Vector3 MinComponents(this IReadOnlyList<Vector3> @this)
+        {
+            var v = @this[0];
+
+            for (int i = 0; i < @this.Count; i++)
+            {
+                var n = @this[i];
+
+                if (n.x < v.x) v.x = n.x;
+                if (n.y < v.y) v.y = n.y;
+                if (n.z < v.z) v.z = n.z;
+            }
+
+            return v;
+        }
+
+        public static Vector3 MinComponents(this IEnumerable<Vector3> @this)
+        {
+            var v = @this.First();
+
+            foreach (var ve in @this)
+            {
+                if (ve.x < v.x) v.x = ve.x;
+                if (ve.y < v.y) v.y = ve.y;
+                if (ve.z < v.z) v.z = ve.z;
+            }
+
+            return v;
+        }
+
+
+
+        public static Vector3 Sum(this IReadOnlyList<Vector3> @this)
+        {
+            var v = Vector3.zero;
+
+            for (int i = 0; i < @this.Count; i++)
+            {
+                v += @this[i];
+            }
+
+            return v / @this.Count;
+        }
+
+        public static Vector3 Sum(this IEnumerable<Vector3> @this)
+        {
+            var v = Vector3.zero;
+
+            foreach (var ve in @this)
+            {
+                v += ve;
+            }
+
+            var c = @this.Count();
+
+            return c > 0 ? v / c : v;
+        }
 
         public static Vector3 AccelerateTowardsDesiredVectorClamped(this Vector3 current, Vector3 desired, float acceleration)
         {
