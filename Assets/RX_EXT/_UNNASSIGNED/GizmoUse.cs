@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace SUHScripts.ReactiveFPS
+namespace SUHScripts
 {
     public static class GizmoUse
     {

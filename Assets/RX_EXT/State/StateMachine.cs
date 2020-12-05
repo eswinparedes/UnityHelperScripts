@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SUHScripts.ReactiveFPS
+namespace SUHScripts
 {
     public class StateMachine
     {

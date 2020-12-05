@@ -2,7 +2,7 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
 
-namespace SUHScripts.ReactiveFPS
+namespace SUHScripts
 {
     public class AwaitableStateEnterGroup
     {

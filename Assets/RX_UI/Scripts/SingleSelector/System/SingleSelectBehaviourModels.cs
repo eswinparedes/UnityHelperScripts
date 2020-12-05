@@ -20,7 +20,7 @@ namespace RXUI
             Func<TSingleSelection, IObservable<TSingleSelection>> commandSelector,
             Func<TSingleSelection, TRawSelect> rawSelectFunction,
             Func<TSingleSelection, TRawSelect> clearFunction,
-            Func<IObservable<TRawSelect>, IObservable<ASingleSelect<TSingleSelection>>> singleSelection,
+            Func<IObservable<TRawSelect>, IObservable<SingleSelect<TSingleSelection>>> singleSelection,
             IObservable<bool> rootSelectionEnterExit, Func<TSingleSelection, TSingleSelection, bool> comparer,
             bool doesInitWithFirst = true,
             bool doesResetToFirstOnEnter = false,
@@ -109,7 +109,7 @@ namespace RXUI
         Subject<IObservable<TRawSelect>> m_rawSelectionStream = new Subject<IObservable<TRawSelect>>();
         List<IDisposable> m_disposables = new List<IDisposable>();
 
-        public IObservable<ASingleSelect<TSingleSelection>> SelectStream { get; }
+        public IObservable<SingleSelect<TSingleSelection>> SelectStream { get; }
         public IObservable<bool> EnterExitStream { get; }
         public bool IsEntered { get; private set; }
     }

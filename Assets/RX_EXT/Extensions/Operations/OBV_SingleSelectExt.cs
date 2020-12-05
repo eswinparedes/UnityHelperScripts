@@ -16,7 +16,7 @@ public static class OBV_SingleSelectExt
     /// <param name="this"></param>
     /// <param name="equalsComparer"></param>
     /// <returns></returns>
-    public static IObservable<ASingleSelect<T>> ToggleSelect<T>(this IObservable<Option<T>> @this, Func<T, T, bool> equalsComparer) =>
+    public static IObservable<SingleSelect<T>> ToggleSelect<T>(this IObservable<Option<T>> @this, Func<T, T, bool> equalsComparer) =>
             @this
             .Scan(new SingleSelect<T>(), (lastSingleSelect, newIn) =>
             {
@@ -30,8 +30,8 @@ public static class OBV_SingleSelectExt
                 }
             });
 
-    public static IObservable<ASingleSelect<T>> NewEntrySelect<T>(this IObservable<Option<T>> source, Func<T, T, bool> comparer) =>
-            Observable.Create<ASingleSelect<T>>(observer =>
+    public static IObservable<SingleSelect<T>> NewEntrySelect<T>(this IObservable<Option<T>> source, Func<T, T, bool> comparer) =>
+            Observable.Create<SingleSelect<T>>(observer =>
             {
                 Option<T> current = None.Default;
 
@@ -71,8 +71,8 @@ public static class OBV_SingleSelectExt
                    onError: observer.OnError);
             });
 
-    public static IObservable<ASingleSelect<T>> SingleStopSelect<T>(this IObservable<EnterExitable<T>> @this, Func<T, T, bool> comparer) =>
-            Observable.Create<ASingleSelect<T>>(observer =>
+    public static IObservable<SingleSelect<T>> SingleStopSelect<T>(this IObservable<EnterExitable<T>> @this, Func<T, T, bool> comparer) =>
+            Observable.Create<SingleSelect<T>>(observer =>
             {
                 EnterExitable<T> selected = null;
                 return
@@ -104,52 +104,15 @@ public static class OBV_SingleSelectExt
 
 
 
-public abstract class ASingleSelect<T>
+
+public struct SingleSelect<T>
 {
-    public abstract Option<T> Select { get; }
-    public abstract Option<T> Deselect { get; }
-}
-
-class SingleSelect_Mutable<T> : ASingleSelect<T>
-{
-    public SingleSelect_Mutable()
-    {
-        m_select = None.Default;
-        m_deselect = None.Default;
-    }
-
-    public SingleSelect_Mutable(Option<T> select, Option<T> deselect)
-    {
-        m_select = select;
-        m_deselect = deselect;
-    }
-
-    public void Apply(Option<T>? select = null, Option<T>? deselect = null)
-    {
-        m_select = select ?? m_select;
-        m_deselect = deselect ?? m_deselect;
-    }
-    Option<T> m_select;
-    Option<T> m_deselect;
-
-    public override Option<T> Select => m_select;
-    public override Option<T> Deselect => m_deselect;
-}
-
-class SingleSelect<T> : ASingleSelect<T>
-{
-    public SingleSelect()
-    {
-        Select = None.Default;
-        Deselect = None.Default;
-    }
-
     public SingleSelect(Option<T> select, Option<T> deselect)
     {
         Select = select;
         Deselect = deselect;
     }
 
-    public override Option<T> Select { get; }
-    public override Option<T> Deselect { get; }
+    public Option<T> Select { get; }
+    public Option<T> Deselect { get; }
 }

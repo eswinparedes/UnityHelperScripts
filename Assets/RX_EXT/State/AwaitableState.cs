@@ -6,7 +6,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SUHScripts.ReactiveFPS
+namespace SUHScripts
 {
     public abstract class AwaitableState : IState
     {

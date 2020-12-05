@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using System;
 
-namespace SUHScripts.ReactiveFPS
+namespace SUHScripts
 {
-    public class Singleton<T>
+    public class Singleton<T> : IDisposable
     {
         static Singleton<T> Instance;
         static Component attachedComponent;
@@ -25,11 +26,11 @@ namespace SUHScripts.ReactiveFPS
 
         }
 
-        public virtual void OnReset()
+        protected virtual void OnReset()
         {
 
         }
-        public void Reset()
+        public void Dispose()
         {
             if (!DidSucceed) return;
             if (IsReset) return;

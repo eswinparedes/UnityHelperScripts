@@ -1,6 +1,6 @@
 ﻿using SUHScripts.Functional;
 
-namespace SUHScripts.ReactiveFPS
+namespace SUHScripts
 {
     public interface IState
     {

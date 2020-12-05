@@ -42,5 +42,8 @@ namespace SUHScripts
         public static float JoystickAngle(this Vector2 @this) =>
             Vector2.Angle(Vector2.up, @this);
 
+        public static int RandomRange(this Vector2Int @this) =>
+            UnityEngine.Random.Range(@this.x, @this.y);
+
     }
 }

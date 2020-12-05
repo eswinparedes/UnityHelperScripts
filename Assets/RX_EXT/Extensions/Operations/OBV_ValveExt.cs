@@ -96,15 +96,57 @@ namespace SUHScripts
                 return new CompositeDisposable(sub0, sub1);
             });
 
-        /// <summary>
-        /// As soon as the valve sets false, evaluate releaseValue
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="this"></param>
-        /// <param name="valve"></param>
-        /// <param name="releaseValueSource"></param>
-        /// <param name="startPlaying"></param>
-        /// <returns></returns>
+        public static IObservable<BoolTrifecta> StutterValve(this IObservable<BoolTrifecta> @this, IObservable<bool> valve) =>
+        Observable.Create<BoolTrifecta>(observer =>
+        {
+            BoolTrifecta runningValue = default;
+
+            var isPlaying = true;
+            var isAwaiting = false;
+
+            var sub1 = @this.Subscribe(bt =>
+            {
+                if (isPlaying)
+                {
+                    if (isAwaiting)
+                    {
+                        isAwaiting = bt != BoolTrifecta.False;
+                    }
+                    else
+                    {
+                        runningValue = bt;
+                        observer.OnNext(bt);
+                    }
+                }
+            });
+
+            var sub2 = valve.DistinctUntilChanged().Subscribe(valveOn =>
+            {
+                isPlaying = valveOn;
+
+                if (valveOn)
+                {
+                    isAwaiting = runningValue != BoolTrifecta.False;
+                }
+                else
+                {
+                    if (runningValue.IsTrue())
+                    {
+                        observer.OnNext(BoolTrifecta.FalseThisFrame);
+                        observer.OnNext(BoolTrifecta.False);
+                    }
+                    else if (runningValue.IsFalseThisFrame)
+                    {
+                        observer.OnNext(BoolTrifecta.False);
+                    }
+
+                    runningValue = BoolTrifecta.False;
+                }
+
+            });
+
+            return new CompositeDisposable(sub1, sub2);
+        });
     }
 
 }

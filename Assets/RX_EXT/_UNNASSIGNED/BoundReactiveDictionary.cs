@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using SUHScripts.Functional;
 
-namespace SUHScripts.ReactiveFPS
+namespace SUHScripts
 {
     public class BoundReactiveDictionary<TKey, TValue> : IReadOnlyReactiveDictionary<TKey, TValue>, IDisposable
     {

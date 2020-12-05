@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using SUHScripts.Functional;
 
-namespace SUHScripts.ReactiveFPS 
+namespace SUHScripts 
 {
     public class ReduceLatestProxy<T>
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace SUHScripts.ReactiveFPS
+namespace SUHScripts
 {
     public class ComposableState<T> : ComposableState
     {
-        public ComposableState(T sourceState, Action onEnter, Action onExit, Action<float> tick) : base(onEnter, onExit, tick)
+        public ComposableState(T sourceState, Action onEnter = null, Action onExit = null, Action<float> tick = null) : base(onEnter, onExit, tick)
         {
             SourceState = sourceState;
         }
@@ -18,11 +18,11 @@ namespace SUHScripts.ReactiveFPS
         Action m_onExit;
         Action<float> m_tick;
 
-        public ComposableState(Action onEnter, Action onExit, Action<float> tick)
+        public ComposableState(Action onEnter = null, Action onExit = null, Action<float> tick = null)
         {
-            m_onEnter = onEnter;
-            m_onExit = onExit;
-            m_tick = tick;
+            m_onEnter = onEnter ?? State.EmptyAction;
+            m_onExit = onExit ?? State.EmptyAction;
+            m_tick = tick ?? State.EmptyFloatAction;
         }
 
         public void OnEnter() => m_onEnter();

@@ -1,4 +1,6 @@
-﻿namespace SUHScripts
+﻿using UnityEngine;
+
+namespace SUHScripts
 {
     public static class BoolTrifectaExtensions 
     {
@@ -21,6 +23,22 @@
 
         public static BoolTrifecta AsFalseThisFrame(this BoolTrifecta @this) =>
             new BoolTrifecta(false, false, true);
+
+        public static BoolTrifecta FromKey(KeyCode keyCode)
+        {
+            if (Input.GetKeyDown(keyCode)) return BoolTrifecta.TrueThisFrame;
+            if (Input.GetKey(keyCode)) return BoolTrifecta.TrueStay;
+            if (Input.GetKeyUp(keyCode)) return BoolTrifecta.FalseThisFrame;
+            return BoolTrifecta.False;
+        }
+
+        public static BoolTrifecta FromMouse(int index)
+        {
+            if (Input.GetMouseButtonDown(index)) return BoolTrifecta.TrueThisFrame;
+            if (Input.GetMouseButtonUp(index)) return BoolTrifecta.FalseThisFrame;
+            if (Input.GetMouseButton(index)) return BoolTrifecta.TrueStay;
+            return BoolTrifecta.False;
+        }
     }
 }
 
