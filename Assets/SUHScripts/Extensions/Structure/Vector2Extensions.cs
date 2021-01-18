@@ -27,6 +27,9 @@ namespace SUHScripts
             (x == null ? @this.x : x.Value, y == null ? @this.y : y.Value)
             .Vector2Construct();
 
+        public static Vector3 ToVector3Z(this Vector2 @this, float z) =>
+            new Vector3(@this.x, @this.y, z);
+
         public static Vector3 AsXZ(this Vector2 @this) =>
             new Vector3(@this.x, 0, @this.y);
 
